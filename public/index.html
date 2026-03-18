@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniAero-OBB - 无人机视角多模态小目标检测平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <!-- Hero Section -->
+    <div class="relative overflow-hidden">
+        <!-- Navigation -->
+        <nav class="fixed top-0 left-0 right-0 z-50 px-4 py-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-blue-100/60 dark:border-white/10 shadow-sm">
+            <div class="flex items-center justify-between mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <div class="flex items-center space-x-3">
+                    <!-- Logo 图片 -->
+                    <img src="assets/images/logo.png" alt="OmniAero-OBB Logo" class="w-12 h-12 rounded-lg">
+                    <span class="text-2xl font-bold text-blue-900 dark:text-white">OmniAero-OBB</span>
+                </div>
+                <!-- 中间导航链接 -->
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="#hero" class="px-4 py-2 text-sm font-medium text-blue-700 rounded-lg transition-colors hover:bg-blue-100 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white">首页</a>
+                    <a href="#features" class="px-4 py-2 text-sm font-medium text-blue-700 rounded-lg transition-colors hover:bg-blue-100 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white">核心技术</a>
+                    <a href="#models" class="px-4 py-2 text-sm font-medium text-blue-700 rounded-lg transition-colors hover:bg-blue-100 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white">模型展示</a>
+                    <a href="#start" class="px-4 py-2 text-sm font-medium text-blue-700 rounded-lg transition-colors hover:bg-blue-100 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white">快速开始</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="sign-in.html" class="px-4 py-2 text-sm font-medium text-blue-700 transition-colors rounded-lg hover:bg-blue-100 dark:text-white dark:hover:bg-white/10">
+                        登录
+                    </a>
+                    <a href="sign-up.html" class="px-6 py-2 text-sm font-medium text-white transition-all rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-lg shadow-blue-500/50">
+                        免费注册
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Image Marquee Strip -->
+        <div id="gallery" class="relative w-full overflow-hidden py-6 mt-20 border-y border-blue-200/60 dark:border-white/10 bg-white/30 dark:bg-white/5 backdrop-blur-sm">
+            <!-- 左侧渐变遮罩 -->
+            <div class="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none bg-gradient-to-r from-blue-50 dark:from-gray-900 to-transparent"></div>
+            <!-- 右侧渐变遮罩 -->
+            <div class="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none bg-gradient-to-l from-blue-50 dark:from-gray-900 to-transparent"></div>
+
+            <!-- 滚动轨道 -->
+            <div class="flex" style="animation: marquee-ltr 32s linear infinite; width: max-content;">
+                <!-- 图片组 × 2 实现无缝衔接 -->
+                <div class="flex items-center space-x-4 pr-4">
+                    <div class="relative flex-shrink-0 w-[30rem] h-72 rounded-xl overflow-hidden border border-blue-200/60 dark:border-white/10 shadow-md group">
+                        <img src="assets/images/image-1.jpg" alt="无人机检测场景" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent"></div>
+                        <span class="absolute bottom-2 left-3 text-xs font-mono text-cyan-300">RGB · 车辆检测</span>
+                    </div>
+                    <div class="relative flex-shrink-0 w-[30rem] h-72 rounded-xl overflow-hidden border border-blue-200/60 dark:border-white/10 shadow-md group">
+                        <img src="assets/images/image-2.jpg" alt="红外热成像" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent"></div>
+                        <span class="absolute bottom-2 left-3 text-xs font-mono text-orange-300">IR · 热成像</span>
+                    </div>
+                    <div class="relative flex-shrink-0 w-[30rem] h-72 rounded-xl overflow-hidden border border-blue-200/60 dark:border-white/10 shadow-md group">
+                        <img src="assets/images/image-3.jpg" alt="多模态融合" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent"></div>
+                        <span class="absolute bottom-2 left-3 text-xs font-mono text-green-300">FUSION · 多模态</span>
+                    </div>
+                    <div class="relative flex-shrink-0 w-[30rem] h-72 rounded-xl overflow-hidden border border-blue-200/60 dark:border-white/10 shadow-md group">
+                        <img src="assets/images/image-4.jpg" alt="夜间检测" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent"></div>
+                        <span class="absolute bottom-2 left-3 text-xs font-mono text-purple-300">NIGHT · 夜间</span>
+                    </div>
+                    <div class="relative flex-shrink-0 w-[30rem] h-72 rounded-xl overflow-hidden border border-blue-200/60 dark:border-white/10 shadow-md group">
+                        <img src="assets/images/image-5.jpg" alt="雨雾场景" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent"></div>
+                        <span class="absolute bottom-2 left-3 text-xs font-mono text-blue-300">FOG · 雨雾</span>
+                    </div>
+                    <div class="relative flex-shrink-0 w-[30rem] h-72 rounded-xl overflow-hidden border border-blue-200/60 dark:border-white/10 shadow-md group">
+                        <img src="assets/images/image-6.jpg" alt="交通路口" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent"></div>
+                        <span class="absolute bottom-2 left-3 text-xs font-mono text-yellow-300">TRAFFIC · 路口</span>
+                    </div>
+                </div>
+                <!-- 复制一组实现无缝循环 -->
+                <div class="flex items-center space-x-4 pr-4">
+                    <div class="relative flex-shrink-0 w-[30rem] h-72 rounded-xl overflow-hidden border border-blue-200/60 dark:border-white/10 shadow-md group">
+                        <img src="assets/images/image-1.jpg" alt="无人机检测场景" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent"></div>
+                        <span class="absolute bottom-2 left-3 text-xs font-mono text-cyan-300">RGB · 车辆检测</span>
+                    </div>
+                    <div class="relative flex-shrink-0 w-[30rem] h-72 rounded-xl overflow-hidden border border-blue-200/60 dark:border-white/10 shadow-md group">
+                        <img src="assets/images/image-2.jpg" alt="红外热成像" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent"></div>
+                        <span class="absolute bottom-2 left-3 text-xs font-mono text-orange-300">IR · 热成像</span>
+                    </div>
+                    <div class="relative flex-shrink-0 w-[30rem] h-72 rounded-xl overflow-hidden border border-blue-200/60 dark:border-white/10 shadow-md group">
+                        <img src="assets/images/image-3.jpg" alt="多模态融合" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent"></div>
+                        <span class="absolute bottom-2 left-3 text-xs font-mono text-green-300">FUSION · 多模态</span>
+                    </div>
+                    <div class="relative flex-shrink-0 w-[30rem] h-72 rounded-xl overflow-hidden border border-blue-200/60 dark:border-white/10 shadow-md group">
+                        <img src="assets/images/image-4.jpg" alt="夜间检测" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent"></div>
+                        <span class="absolute bottom-2 left-3 text-xs font-mono text-purple-300">NIGHT · 夜间</span>
+                    </div>
+                    <div class="relative flex-shrink-0 w-[30rem] h-72 rounded-xl overflow-hidden border border-blue-200/60 dark:border-white/10 shadow-md group">
+                        <img src="assets/images/image-5.jpg" alt="雨雾场景" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent"></div>
+                        <span class="absolute bottom-2 left-3 text-xs font-mono text-blue-300">FOG · 雨雾</span>
+                    </div>
+                    <div class="relative flex-shrink-0 w-[30rem] h-72 rounded-xl overflow-hidden border border-blue-200/60 dark:border-white/10 shadow-md group">
+                        <img src="assets/images/image-6.jpg" alt="交通路口" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent"></div>
+                        <span class="absolute bottom-2 left-3 text-xs font-mono text-yellow-300">TRAFFIC · 路口</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Content -->
+        <div id="hero" class="relative px-4 py-15 mx-auto max-w-7xl sm:px-6 lg:px-8 lg:py-20">
+            <div class="grid gap-12 lg:grid-cols-1 lg:gap-8">
+                <!-- Top Column -->
+                <div class="flex flex-col justify-center space-y-8">
+                    <div class="space-y-4">
+                        <div class="inline-flex items-center px-4 py-2 space-x-2 rounded-full bg-cyan-100 dark:bg-cyan-500/10 backdrop-blur-sm">
+                            <span class="relative flex w-2 h-2">
+                                <span class="absolute inline-flex w-full h-full rounded-full opacity-75 animate-ping bg-cyan-500 dark:bg-cyan-400"></span>
+                                <span class="relative inline-flex w-2 h-2 rounded-full bg-cyan-600 dark:bg-cyan-500"></span>
+                            </span>
+                            <span class="text-sm font-medium text-cyan-800 dark:text-cyan-300">AI驱动的智能检测技术</span>
+                        </div>
+                        <h1 class="text-5xl font-bold leading-tight text-blue-900 dark:text-white lg:text-6xl">
+                            全天候交通场景
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+                                小目标检测
+                            </span>
+                        </h1>
+                        <p class="text-xl leading-relaxed text-black dark:text-gray-300">
+                            基于无人机视角的多模态融合技术，实现复杂天气条件下的高精度目标识别与追踪，为智能交通提供可靠的视觉感知解决方案。
+                        </p>
+                    </div>
+
+                    <!-- Features -->
+                    <div class="grid gap-4 sm:grid-cols-4">
+                        <div class="flex items-start space-x-3">
+                            <div class="flex items-center justify-center flex-shrink-0 w-10 h-10 rounded-lg bg-cyan-100 dark:bg-cyan-500/20">
+                                <svg class="w-5 h-5 text-cyan-600 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-blue-900 dark:text-white">多模态融合</h3>
+                                <p class="text-sm text-black dark:text-black">RGB+红外双模态协同</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="flex items-center justify-center flex-shrink-0 w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-500/20">
+                                <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-blue-900 dark:text-white">实时检测</h3>
+                                <p class="text-sm text-black dark:text-black">毫秒级响应速度</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="flex items-center justify-center flex-shrink-0 w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-500/20">
+                                <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-blue-900 dark:text-white">全天候适应</h3>
+                                <p class="text-sm text-black dark:text-black">雨雾雪等复杂环境</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="flex items-center justify-center flex-shrink-0 w-10 h-10 rounded-lg bg-green-100 dark:bg-green-500/20">
+                                <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-blue-900 dark:text-white">高精度识别</h3>
+                                <p class="text-sm text-black dark:text-black">小目标检测优化</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+                        <a href="sign-up.html" class="inline-flex items-center justify-center px-8 py-4 text-base font-medium text-white transition-all rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-xl shadow-blue-500/30 hover:shadow-blue-500/50">
+                            立即开始
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </a>
+                        <a href="#features" class="inline-flex items-center justify-center px-8 py-4 text-base font-medium text-blue-700 transition-all border-2 border-blue-300 rounded-xl hover:bg-blue-50 dark:text-white dark:border-white/20 dark:hover:bg-white/10">
+                            了解更多
+                            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 图片滚动展示 + 数据卡片 并排区域 -->
+                <div class="grid gap-8 lg:grid-cols-2 mt-4">
+
+                <!-- 图片滚动展示 -->
+                <div class="relative overflow-hidden rounded-2xl border border-blue-200 dark:border-white/10 bg-white/60 dark:bg-white/5 backdrop-blur-sm shadow-xl">
+                    <!-- 顶部标题栏 -->
+                    <div class="flex items-center justify-between px-4 py-3 border-b border-blue-100 dark:border-white/10 bg-blue-50/80 dark:bg-white/5">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-red-400"></span>
+                            <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
+                            <span class="w-3 h-3 rounded-full bg-green-400"></span>
+                        </div>
+                        <span class="text-xs font-mono text-blue-500 dark:text-cyan-400">UAV · LIVE FEED</span>
+                        <span class="flex items-center space-x-1 text-xs text-green-600 dark:text-green-400">
+                            <span class="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                            <span>STREAMING</span>
+                        </span>
+                    </div>
+
+                    <!-- 滚动容器 -->
+                    <div class="relative h-96 overflow-hidden">
+                        <!-- 扫描线动画 -->
+                        <div class="absolute inset-0 z-10 pointer-events-none" style="background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(6,182,212,0.03) 2px, rgba(6,182,212,0.03) 4px);"></div>
+                        <div class="absolute top-0 left-0 right-0 h-1 z-20 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-60" style="animation: scan-line 3s linear infinite;"></div>
+
+                        <!-- 图片列表（自动滚动） -->
+                        <div class="flex flex-col" style="animation: scroll-up 18s linear infinite;">
+                            <!-- 图片组 × 2（首尾衔接实现无缝循环） -->
+                            <div class="flex flex-col">
+                                <div class="relative flex-shrink-0 h-96 w-full overflow-hidden">
+                                    <img src="assets/images/detect-1.jpg" alt="无人机检测画面1" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-transparent to-transparent"></div>
+                                    <div class="absolute bottom-3 left-3 flex items-center space-x-2">
+                                        <span class="px-2 py-0.5 text-xs font-mono text-cyan-300 bg-cyan-900/70 rounded border border-cyan-500/40">FRAME 001 · RGB</span>
+                                        <span class="px-2 py-0.5 text-xs font-mono text-green-300 bg-green-900/70 rounded border border-green-500/40">OBJ: 12</span>
+                                    </div>
+                                </div>
+                                <div class="relative flex-shrink-0 h-96 w-full overflow-hidden">
+                                    <img src="assets/images/detect-2.jpg" alt="无人机检测画面2" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-transparent to-transparent"></div>
+                                    <div class="absolute bottom-3 left-3 flex items-center space-x-2">
+                                        <span class="px-2 py-0.5 text-xs font-mono text-cyan-300 bg-cyan-900/70 rounded border border-cyan-500/40">FRAME 002 · IR</span>
+                                        <span class="px-2 py-0.5 text-xs font-mono text-yellow-300 bg-yellow-900/70 rounded border border-yellow-500/40">OBJ: 8</span>
+                                    </div>
+                                </div>
+                                <div class="relative flex-shrink-0 h-96 w-full overflow-hidden">
+                                    <img src="assets/images/detect-3.jpg" alt="无人机检测画面3" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-transparent to-transparent"></div>
+                                    <div class="absolute bottom-3 left-3 flex items-center space-x-2">
+                                        <span class="px-2 py-0.5 text-xs font-mono text-cyan-300 bg-cyan-900/70 rounded border border-cyan-500/40">FRAME 003 · FUSION</span>
+                                        <span class="px-2 py-0.5 text-xs font-mono text-red-300 bg-red-900/70 rounded border border-red-500/40">OBJ: 21</span>
+                                    </div>
+                                </div>
+                                <div class="relative flex-shrink-0 h-96 w-full overflow-hidden">
+                                    <img src="assets/images/detect-4.jpg" alt="无人机检测画面4" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-transparent to-transparent"></div>
+                                    <div class="absolute bottom-3 left-3 flex items-center space-x-2">
+                                        <span class="px-2 py-0.5 text-xs font-mono text-cyan-300 bg-cyan-900/70 rounded border border-cyan-500/40">FRAME 004 · NIGHT</span>
+                                        <span class="px-2 py-0.5 text-xs font-mono text-purple-300 bg-purple-900/70 rounded border border-purple-500/40">OBJ: 5</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 复制一组实现无缝衔接 -->
+                            <div class="flex flex-col">
+                                <div class="relative flex-shrink-0 h-96 w-full overflow-hidden">
+                                    <img src="/images/gallery/detect-1.jpg" alt="无人机检测画面1" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-transparent to-transparent"></div>
+                                    <div class="absolute bottom-3 left-3 flex items-center space-x-2">
+                                        <span class="px-2 py-0.5 text-xs font-mono text-cyan-300 bg-cyan-900/70 rounded border border-cyan-500/40">FRAME 001 · RGB</span>
+                                        <span class="px-2 py-0.5 text-xs font-mono text-green-300 bg-green-900/70 rounded border border-green-500/40">OBJ: 12</span>
+                                    </div>
+                                </div>
+                                <div class="relative flex-shrink-0 h-96 w-full overflow-hidden">
+                                    <img src="/images/gallery/detect-2.jpg" alt="无人机检测画面2" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-transparent to-transparent"></div>
+                                    <div class="absolute bottom-3 left-3 flex items-center space-x-2">
+                                        <span class="px-2 py-0.5 text-xs font-mono text-cyan-300 bg-cyan-900/70 rounded border border-cyan-500/40">FRAME 002 · IR</span>
+                                        <span class="px-2 py-0.5 text-xs font-mono text-yellow-300 bg-yellow-900/70 rounded border border-yellow-500/40">OBJ: 8</span>
+                                    </div>
+                                </div>
+                                <div class="relative flex-shrink-0 h-96 w-full overflow-hidden">
+                                    <img src="/images/gallery/detect-3.jpg" alt="无人机检测画面3" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-transparent to-transparent"></div>
+                                    <div class="absolute bottom-3 left-3 flex items-center space-x-2">
+                                        <span class="px-2 py-0.5 text-xs font-mono text-cyan-300 bg-cyan-900/70 rounded border border-cyan-500/40">FRAME 003 · FUSION</span>
+                                        <span class="px-2 py-0.5 text-xs font-mono text-red-300 bg-red-900/70 rounded border border-red-500/40">OBJ: 21</span>
+                                    </div>
+                                </div>
+                                <div class="relative flex-shrink-0 h-96 w-full overflow-hidden">
+                                    <img src="/images/gallery/detect-4.jpg" alt="无人机检测画面4" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-blue-900/60 via-transparent to-transparent"></div>
+                                    <div class="absolute bottom-3 left-3 flex items-center space-x-2">
+                                        <span class="px-2 py-0.5 text-xs font-mono text-cyan-300 bg-cyan-900/70 rounded border border-cyan-500/40">FRAME 004 · NIGHT</span>
+                                        <span class="px-2 py-0.5 text-xs font-mono text-purple-300 bg-purple-900/70 rounded border border-purple-500/40">OBJ: 5</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 上下渐变遮罩 -->
+                        <div class="absolute top-0 left-0 right-0 h-8 z-10 pointer-events-none bg-gradient-to-b from-white/80 dark:from-gray-900/80 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 right-0 h-8 z-10 pointer-events-none bg-gradient-to-t from-white/80 dark:from-gray-900/80 to-transparent"></div>
+                    </div>
+
+                    <!-- 底部状态栏 -->
+                    <div class="flex items-center justify-between px-4 py-2 border-t border-blue-100 dark:border-white/10 bg-blue-50/80 dark:bg-white/5">
+                        <span class="text-xs font-mono text-blue-400 dark:text-cyan-500">RES: 1920×1080</span>
+                        <span class="text-xs font-mono text-blue-400 dark:text-cyan-500">FPS: 30</span>
+                        <span class="text-xs font-mono text-blue-400 dark:text-cyan-500">MODEL: OmniAero-v2</span>
+                    </div>
+                </div>
+
+                <!-- Bottom Column - Visual -->
+                <div class="relative flex flex-col">
+                    <div class="relative z-10 flex flex-col h-full">
+                        <!-- Floating Card -->
+                        <div class="rounded-2xl bg-white/90 backdrop-blur-xl border border-blue-200 shadow-2xl dark:bg-white/10 dark:border-white/20 flex flex-col h-full min-h-[28rem] overflow-hidden">
+
+                            <!-- 顶部状态栏 -->
+                            <div class="flex items-center justify-between px-5 py-3 border-b border-blue-100 dark:border-white/10 bg-blue-50/80 dark:bg-white/5">
+                                <div class="flex items-center space-x-2">
+                                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                    <span class="text-xs font-mono font-semibold text-blue-700 dark:text-cyan-400">DETECTION PANEL</span>
+                                </div>
+                                <span class="px-2 py-0.5 text-xs font-mono text-green-700 dark:text-green-400 bg-green-100 dark:bg-green-500/20 rounded-full border border-green-200 dark:border-green-500/30">运行中</span>
+                            </div>
+
+                            <div class="p-5 flex flex-col gap-4 flex-1">
+
+                                <!-- 模型信息 -->
+                                <div class="rounded-xl border border-blue-100 dark:border-white/10 bg-gradient-to-r from-cyan-50/80 to-blue-50/80 dark:from-cyan-500/10 dark:to-blue-500/10 px-4 py-3 flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600">
+                                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"></path></svg>
+                                        </div>
+                                        <div>
+                                            <div class="text-xs text-blue-500 dark:text-gray-400 font-mono">CURRENT MODEL</div>
+                                            <div class="text-sm font-bold text-blue-900 dark:text-white">OmniAero-OBB v2</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-xs text-blue-500 dark:text-gray-400 font-mono">mAP@0.5</div>
+                                        <div class="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600">92.3%</div>
+                                    </div>
+                                </div>
+
+                                <!-- 检测目标分类（数字随图片切换，布局不变） -->
+                                <div>
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-mono font-semibold text-blue-600 dark:text-cyan-400">TARGET CLASSES · 5类目标</span>
+                                        <!-- 场景标签 -->
+                                        <span class="relative inline-block w-28 h-4">
+                                            <span class="absolute right-0 text-xs font-mono text-blue-400 dark:text-gray-400" style="animation: data-group-a 18s linear infinite;">RGB · 晴天场景</span>
+                                            <span class="absolute right-0 text-xs font-mono text-cyan-500 dark:text-cyan-400" style="animation: data-group-b 18s linear infinite;">IR · 复杂天气</span>
+                                        </span>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <!-- 公交车 -->
+                                        <div class="flex items-center justify-between p-2.5 rounded-lg bg-blue-50 dark:bg-white/5 hover:bg-cyan-50 dark:hover:bg-cyan-500/10 transition-colors">
+                                            <div class="flex items-center space-x-2.5">
+                                                <span class="w-2 h-2 rounded-full bg-cyan-500"></span>
+                                                <span class="text-sm font-medium text-blue-900 dark:text-gray-200">公交车</span>
+                                                <span class="text-xs font-mono text-blue-400 dark:text-gray-500">BUS</span>
+                                            </div>
+                                            <div class="flex items-center space-x-3">
+                                                <div class="relative w-20 h-1.5 rounded-full bg-blue-100 dark:bg-white/10 overflow-hidden">
+                                                    <div class="absolute inset-y-0 left-0 h-full rounded-full bg-cyan-500" style="animation: bar-bus-a 18s linear infinite;"></div>
+                                                    <div class="absolute inset-y-0 left-0 h-full rounded-full bg-cyan-400" style="animation: bar-bus-b 18s linear infinite;"></div>
+                                                </div>
+                                                <span class="relative inline-flex items-center justify-end w-10 h-5">
+                                                    <span class="absolute right-0 text-sm font-bold text-cyan-600 dark:text-cyan-400" style="animation: data-group-a 18s linear infinite;">342</span>
+                                                    <span class="absolute right-0 text-sm font-bold text-cyan-600 dark:text-cyan-400" style="animation: data-group-b 18s linear infinite;">198</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!-- 小轿车 -->
+                                        <div class="flex items-center justify-between p-2.5 rounded-lg bg-blue-50 dark:bg-white/5 hover:bg-blue-100 dark:hover:bg-blue-500/10 transition-colors">
+                                            <div class="flex items-center space-x-2.5">
+                                                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                                                <span class="text-sm font-medium text-blue-900 dark:text-gray-200">小轿车</span>
+                                                <span class="text-xs font-mono text-blue-400 dark:text-gray-500">CAR</span>
+                                            </div>
+                                            <div class="flex items-center space-x-3">
+                                                <div class="relative w-20 h-1.5 rounded-full bg-blue-100 dark:bg-white/10 overflow-hidden">
+                                                    <div class="absolute inset-y-0 left-0 h-full rounded-full bg-blue-500" style="animation: bar-car-a 18s linear infinite;"></div>
+                                                    <div class="absolute inset-y-0 left-0 h-full rounded-full bg-blue-400" style="animation: bar-car-b 18s linear infinite;"></div>
+                                                </div>
+                                                <span class="relative inline-flex items-center justify-end w-10 h-5">
+                                                    <span class="absolute right-0 text-sm font-bold text-blue-600 dark:text-blue-400" style="animation: data-group-a 18s linear infinite;">1,247</span>
+                                                    <span class="absolute right-0 text-sm font-bold text-blue-600 dark:text-blue-400" style="animation: data-group-b 18s linear infinite;">893</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!-- 货运车 -->
+                                        <div class="flex items-center justify-between p-2.5 rounded-lg bg-blue-50 dark:bg-white/5 hover:bg-green-50 dark:hover:bg-green-500/10 transition-colors">
+                                            <div class="flex items-center space-x-2.5">
+                                                <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                                                <span class="text-sm font-medium text-blue-900 dark:text-gray-200">货运车</span>
+                                                <span class="text-xs font-mono text-blue-400 dark:text-gray-500">FREIGHT</span>
+                                            </div>
+                                            <div class="flex items-center space-x-3">
+                                                <div class="relative w-20 h-1.5 rounded-full bg-blue-100 dark:bg-white/10 overflow-hidden">
+                                                    <div class="absolute inset-y-0 left-0 h-full rounded-full bg-green-500" style="animation: bar-freight-a 18s linear infinite;"></div>
+                                                    <div class="absolute inset-y-0 left-0 h-full rounded-full bg-green-400" style="animation: bar-freight-b 18s linear infinite;"></div>
+                                                </div>
+                                                <span class="relative inline-flex items-center justify-end w-10 h-5">
+                                                    <span class="absolute right-0 text-sm font-bold text-green-600 dark:text-green-400" style="animation: data-group-a 18s linear infinite;">418</span>
+                                                    <span class="absolute right-0 text-sm font-bold text-green-600 dark:text-green-400" style="animation: data-group-b 18s linear infinite;">672</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!-- 卡车 -->
+                                        <div class="flex items-center justify-between p-2.5 rounded-lg bg-blue-50 dark:bg-white/5 hover:bg-orange-50 dark:hover:bg-orange-500/10 transition-colors">
+                                            <div class="flex items-center space-x-2.5">
+                                                <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+                                                <span class="text-sm font-medium text-blue-900 dark:text-gray-200">卡车</span>
+                                                <span class="text-xs font-mono text-blue-400 dark:text-gray-500">TRUCK</span>
+                                            </div>
+                                            <div class="flex items-center space-x-3">
+                                                <div class="relative w-20 h-1.5 rounded-full bg-blue-100 dark:bg-white/10 overflow-hidden">
+                                                    <div class="absolute inset-y-0 left-0 h-full rounded-full bg-orange-500" style="animation: bar-truck-a 18s linear infinite;"></div>
+                                                    <div class="absolute inset-y-0 left-0 h-full rounded-full bg-orange-400" style="animation: bar-truck-b 18s linear infinite;"></div>
+                                                </div>
+                                                <span class="relative inline-flex items-center justify-end w-10 h-5">
+                                                    <span class="absolute right-0 text-sm font-bold text-orange-600 dark:text-orange-400" style="animation: data-group-a 18s linear infinite;">573</span>
+                                                    <span class="absolute right-0 text-sm font-bold text-orange-600 dark:text-orange-400" style="animation: data-group-b 18s linear infinite;">461</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!-- 面包车 -->
+                                        <div class="flex items-center justify-between p-2.5 rounded-lg bg-blue-50 dark:bg-white/5 hover:bg-purple-50 dark:hover:bg-purple-500/10 transition-colors">
+                                            <div class="flex items-center space-x-2.5">
+                                                <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                                                <span class="text-sm font-medium text-blue-900 dark:text-gray-200">面包车</span>
+                                                <span class="text-xs font-mono text-blue-400 dark:text-gray-500">VAN</span>
+                                            </div>
+                                            <div class="flex items-center space-x-3">
+                                                <div class="relative w-20 h-1.5 rounded-full bg-blue-100 dark:bg-white/10 overflow-hidden">
+                                                    <div class="absolute inset-y-0 left-0 h-full rounded-full bg-purple-500" style="animation: bar-van-a 18s linear infinite;"></div>
+                                                    <div class="absolute inset-y-0 left-0 h-full rounded-full bg-purple-400" style="animation: bar-van-b 18s linear infinite;"></div>
+                                                </div>
+                                                <span class="relative inline-flex items-center justify-end w-10 h-5">
+                                                    <span class="absolute right-0 text-sm font-bold text-purple-600 dark:text-purple-400" style="animation: data-group-a 18s linear infinite;">267</span>
+                                                    <span class="absolute right-0 text-sm font-bold text-purple-600 dark:text-purple-400" style="animation: data-group-b 18s linear infinite;">354</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 底部状态 -->
+                                <div class="flex items-center justify-between pt-3 border-t border-blue-100 dark:border-white/10">
+                                    <div class="flex items-center space-x-1.5 text-xs font-mono text-blue-500 dark:text-cyan-500">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <span>实时更新 · 延迟 &lt;50ms</span>
+                                    </div>
+                                    <div class="flex items-center space-x-1.5 text-xs font-mono text-blue-500 dark:text-cyan-500">
+                                        <span>FPS: 47</span>
+                                        <span class="text-blue-200 dark:text-white/20">|</span>
+                                        <span>GPU: 63%</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Decorative Elements -->
+                    <div class="absolute top-0 right-0 w-72 h-72 bg-cyan-300 rounded-full filter blur-3xl opacity-20 animate-pulse dark:bg-cyan-500/30 dark:opacity-20"></div>
+                    <div class="absolute bottom-0 left-0 w-72 h-72 bg-blue-300 rounded-full filter blur-3xl opacity-20 animate-pulse dark:bg-blue-500/30 dark:opacity-20" style="animation-delay: 1s;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div id="features" class="px-4 py-20 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div class="mb-16 text-center">
+            <h2 class="mb-4 text-4xl font-bold text-blue-900 dark:text-white">核心技术</h2>
+            <p class="text-xl text-black dark:text-black">先进的AI算法与多模态融合技术</p>
+        </div>
+
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <!-- Feature 1 -->
+            <div class="p-6 transition-all rounded-2xl bg-white/90 border border-blue-200 hover:shadow-lg hover:border-cyan-400 dark:bg-white/5 dark:border-white/10 dark:hover:bg-white/10 dark:hover:border-cyan-500/50">
+                <div class="flex items-center justify-center w-14 h-14 mb-4 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path>
+                    </svg>
+                </div>
+                <h3 class="mb-2 text-xl font-bold text-blue-900 dark:text-white">深度学习模型</h3>
+                <p class="text-black dark:text-black">采用改进的YOLO架构，针对小目标检测进行专门优化，提升检测精度与召回率。</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="p-6 transition-all rounded-2xl bg-white/90 border border-blue-200 hover:shadow-lg hover:border-blue-400 dark:bg-white/5 dark:border-white/10 dark:hover:bg-white/10 dark:hover:border-blue-500/50">
+                <div class="flex items-center justify-center w-14 h-14 mb-4 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+                    </svg>
+                </div>
+                <h3 class="mb-2 text-xl font-bold text-blue-900 dark:text-white">多模态数据融合</h3>
+                <p class="text-black dark:text-black">融合可见光与红外图像，互补优势，在雨雾等恶劣天气下保持稳定性能。</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="p-6 transition-all rounded-2xl bg-white/90 border border-blue-200 hover:shadow-lg hover:border-purple-400 dark:bg-white/5 dark:border-white/10 dark:hover:bg-white/10 dark:hover:border-purple-500/50">
+                <div class="flex items-center justify-center w-14 h-14 mb-4 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                </div>
+                <h3 class="mb-2 text-xl font-bold text-blue-900 dark:text-white">智能场景适应</h3>
+                <p class="text-black dark:text-black">自动识别天气与光照条件，动态调整检测策略，确保全天候稳定运行。</p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="p-6 transition-all rounded-2xl bg-white/90 border border-blue-200 hover:shadow-lg hover:border-green-400 dark:bg-white/5 dark:border-white/10 dark:hover:bg-white/10 dark:hover:border-green-500/50">
+                <div class="flex items-center justify-center w-14 h-14 mb-4 rounded-xl bg-gradient-to-br from-green-500 to-teal-600">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <h3 class="mb-2 text-xl font-bold text-blue-900 dark:text-white">边缘计算优化</h3>
+                <p class="text-black dark:text-black">模型轻量化设计，支持无人机端侧部署，实现低延迟实时处理。</p>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="p-6 transition-all rounded-2xl bg-white/90 border border-blue-200 hover:shadow-lg hover:border-yellow-400 dark:bg-white/5 dark:border-white/10 dark:hover:bg-white/10 dark:hover:border-yellow-500/50">
+                <div class="flex items-center justify-center w-14 h-14 mb-4 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-600">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                </div>
+                <h3 class="mb-2 text-xl font-bold text-blue-900 dark:text-white">可视化分析</h3>
+                <p class="text-black dark:text-black">实时数据统计与可视化展示，支持历史回溯与轨迹分析。</p>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="p-6 transition-all rounded-2xl bg-white/90 border border-blue-200 hover:shadow-lg hover:border-red-400 dark:bg-white/5 dark:border-white/10 dark:hover:bg-white/10 dark:hover:border-red-500/50">
+                <div class="flex items-center justify-center w-14 h-14 mb-4 rounded-xl bg-gradient-to-br from-red-500 to-pink-600">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h3 class="mb-2 text-xl font-bold text-blue-900 dark:text-white">API接口</h3>
+                <p class="text-black dark:text-black">提供RESTful API，方便集成到现有交通管理系统中。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model Showcase Section -->
+    <div id="models" class="px-4 py-20 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div class="mb-16 text-center">
+            <h2 class="mb-4 text-4xl font-bold text-blue-900 dark:text-white">模型展示</h2>
+            <p class="text-xl text-black dark:text-gray-400">多种检测模型性能对比与可视化展示</p>
+        </div>
+
+        <!-- 模型对比表格 -->
+        <div class="mb-12 overflow-hidden rounded-2xl border border-blue-200 dark:border-white/10 bg-white/90 dark:bg-white/5 shadow-xl">
+            <div class="px-6 py-4 border-b border-blue-100 dark:border-white/10 bg-blue-50/80 dark:bg-white/5 flex items-center space-x-2">
+                <span class="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></span>
+                <span class="text-sm font-mono font-medium text-blue-700 dark:text-cyan-400">MODEL BENCHMARK · OmniAero-OBB v2</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-blue-100 dark:border-white/10">
+                            <th class="px-6 py-4 text-left font-semibold text-blue-900 dark:text-white">模型</th>
+                            <th class="px-6 py-4 text-center font-semibold text-blue-900 dark:text-white">mAP@0.5</th>
+                            <th class="px-6 py-4 text-center font-semibold text-blue-900 dark:text-white">mAP@0.5:0.95</th>
+                            <th class="px-6 py-4 text-center font-semibold text-blue-900 dark:text-white">FPS</th>
+                            <th class="px-6 py-4 text-center font-semibold text-blue-900 dark:text-white">参数量</th>
+                            <th class="px-6 py-4 text-center font-semibold text-blue-900 dark:text-white">全天候</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-blue-50 dark:divide-white/5">
+                        <tr class="bg-gradient-to-r from-cyan-50/80 to-blue-50/80 dark:from-cyan-500/10 dark:to-blue-500/10">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center space-x-2">
+                                    <span class="px-2 py-0.5 text-xs font-bold text-white rounded bg-gradient-to-r from-cyan-500 to-blue-600">OURS</span>
+                                    <span class="font-semibold text-blue-900 dark:text-white">OmniAero-OBB</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-center font-bold text-cyan-600 dark:text-cyan-400">92.3%</td>
+                            <td class="px-6 py-4 text-center font-bold text-cyan-600 dark:text-cyan-400">68.7%</td>
+                            <td class="px-6 py-4 text-center font-bold text-cyan-600 dark:text-cyan-400">47</td>
+                            <td class="px-6 py-4 text-center font-bold text-cyan-600 dark:text-cyan-400">28.6M</td>
+                            <td class="px-6 py-4 text-center"><span class="text-green-500 font-bold">✓</span></td>
+                        </tr>
+                        <tr class="hover:bg-blue-50/50 dark:hover:bg-white/5 transition-colors">
+                            <td class="px-6 py-4 font-medium text-blue-800 dark:text-gray-300">YOLOv8-OBB</td>
+                            <td class="px-6 py-4 text-center text-blue-700 dark:text-gray-300">87.1%</td>
+                            <td class="px-6 py-4 text-center text-blue-700 dark:text-gray-300">61.4%</td>
+                            <td class="px-6 py-4 text-center text-blue-700 dark:text-gray-300">52</td>
+                            <td class="px-6 py-4 text-center text-blue-700 dark:text-gray-300">43.7M</td>
+                            <td class="px-6 py-4 text-center"><span class="text-red-400">✗</span></td>
+                        </tr>
+                        <tr class="hover:bg-blue-50/50 dark:hover:bg-white/5 transition-colors">
+                            <td class="px-6 py-4 font-medium text-blue-800 dark:text-gray-300">RT-DETR</td>
+                            <td class="px-6 py-4 text-center text-blue-700 dark:text-gray-300">85.6%</td>
+                            <td class="px-6 py-4 text-center text-blue-700 dark:text-gray-300">59.2%</td>
+                            <td class="px-6 py-4 text-center text-blue-700 dark:text-gray-300">38</td>
+                            <td class="px-6 py-4 text-center text-blue-700 dark:text-gray-300">67.0M</td>
+                            <td class="px-6 py-4 text-center"><span class="text-red-400">✗</span></td>
+                        </tr>
+                        <tr class="hover:bg-blue-50/50 dark:hover:bg-white/5 transition-colors">
+                            <td class="px-6 py-4 font-medium text-blue-800 dark:text-gray-300">FasterRCNN</td>
+                            <td class="px-6 py-4 text-center text-blue-700 dark:text-gray-300">80.3%</td>
+                            <td class="px-6 py-4 text-center text-blue-700 dark:text-gray-300">54.1%</td>
+                            <td class="px-6 py-4 text-center text-blue-700 dark:text-gray-300">18</td>
+                            <td class="px-6 py-4 text-center text-blue-700 dark:text-gray-300">41.4M</td>
+                            <td class="px-6 py-4 text-center"><span class="text-red-400">✗</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 交互式指标可视化 -->
+        <div class="mb-12 rounded-2xl border border-blue-200 dark:border-white/10 bg-white/90 dark:bg-white/5 shadow-xl overflow-hidden">
+            <!-- 标题栏 -->
+            <div class="px-6 py-4 border-b border-blue-100 dark:border-white/10 bg-blue-50/80 dark:bg-white/5 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <span class="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></span>
+                    <span class="text-sm font-mono font-medium text-blue-700 dark:text-cyan-400">INTERACTIVE BENCHMARK · 指标对比可视化</span>
+                </div>
+                <!-- 指标选择器 -->
+                <div class="flex items-center space-x-1 bg-blue-100/80 dark:bg-white/10 rounded-lg p-1">
+                    <button onclick="switchMetric('map05')" id="btn-map05" class="metric-btn active-metric px-3 py-1.5 text-xs font-mono font-semibold rounded-md transition-all">mAP@0.5</button>
+                    <button onclick="switchMetric('map5095')" id="btn-map5095" class="metric-btn px-3 py-1.5 text-xs font-mono font-semibold rounded-md transition-all">mAP@0.5:0.95</button>
+                    <button onclick="switchMetric('fps')" id="btn-fps" class="metric-btn px-3 py-1.5 text-xs font-mono font-semibold rounded-md transition-all">FPS</button>
+                    <button onclick="switchMetric('params')" id="btn-params" class="metric-btn px-3 py-1.5 text-xs font-mono font-semibold rounded-md transition-all">参数量</button>
+                </div>
+            </div>
+            <!-- 图表区域 -->
+            <div class="p-6">
+                <!-- 当前指标标题 -->
+                <div class="flex items-end justify-between mb-6">
+                    <div>
+                        <p id="chart-metric-name" class="text-2xl font-bold font-mono text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600">mAP@0.5</p>
+                        <p id="chart-metric-desc" class="text-xs font-mono text-blue-400 dark:text-gray-500 mt-0.5">目标检测平均精度（IoU=0.5）</p>
+                    </div>
+                    <span class="text-xs font-mono text-blue-300 dark:text-white/20">▲ 越高越好</span>
+                </div>
+                <!-- 横向柱状图 -->
+                <div id="chart-bars" class="space-y-4"></div>
+                <!-- X轴刻度 -->
+                <div class="mt-4 ml-32 flex justify-between text-xs font-mono text-blue-300 dark:text-white/30">
+                    <span id="tick-0">0</span>
+                    <span id="tick-25"></span>
+                    <span id="tick-50"></span>
+                    <span id="tick-75"></span>
+                    <span id="tick-100"></span>
+                </div>
+                <!-- 网格线（纯装饰） -->
+            </div>
+        </div>
+
+        <!-- 性能指标卡片 -->
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="p-6 rounded-2xl bg-white/90 border border-blue-200 dark:bg-white/5 dark:border-white/10 text-center shadow-md hover:shadow-lg hover:border-cyan-400 dark:hover:border-cyan-500/50 transition-all">
+                <div class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600 mb-2">92.3%</div>
+                <div class="text-sm font-semibold text-blue-900 dark:text-white mb-1">mAP@0.5</div>
+                <div class="text-xs text-black dark:text-gray-400">目标检测精度</div>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/90 border border-blue-200 dark:bg-white/5 dark:border-white/10 text-center shadow-md hover:shadow-lg hover:border-blue-400 dark:hover:border-blue-500/50 transition-all">
+                <div class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600 mb-2">47 FPS</div>
+                <div class="text-sm font-semibold text-blue-900 dark:text-white mb-1">实时推理速度</div>
+                <div class="text-xs text-black dark:text-gray-400">RTX 3080 测试</div>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/90 border border-blue-200 dark:bg-white/5 dark:border-white/10 text-center shadow-md hover:shadow-lg hover:border-green-400 dark:hover:border-green-500/50 transition-all">
+                <div class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-teal-600 mb-2">28.6M</div>
+                <div class="text-sm font-semibold text-blue-900 dark:text-white mb-1">模型参数量</div>
+                <div class="text-xs text-black dark:text-gray-400">轻量化设计</div>
+            </div>
+            <div class="p-6 rounded-2xl bg-white/90 border border-blue-200 dark:bg-white/5 dark:border-white/10 text-center shadow-md hover:shadow-lg hover:border-purple-400 dark:hover:border-purple-500/50 transition-all">
+                <div class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-600 mb-2">5类</div>
+                <div class="text-sm font-semibold text-blue-900 dark:text-white mb-1">支持目标类别</div>
+                <div class="text-xs text-black dark:text-gray-400">车辆·行人·非机动车等</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div id="start" class="px-4 py-20 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-cyan-600 to-blue-600 p-12 shadow-2xl">
+            <div class="relative z-10 text-center">
+                <h2 class="mb-4 text-4xl font-bold text-white">准备好开始了吗？</h2>
+                <p class="mb-8 text-xl text-cyan-100">立即注册，体验智能检测技术的强大能力</p>
+                <div class="flex flex-col justify-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+                    <a href="sign-up.html" class="inline-flex items-center justify-center px-8 py-4 text-base font-medium transition-all bg-white rounded-xl text-cyan-600 hover:bg-gray-100 shadow-xl">
+                        免费注册
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                        </svg>
+                    </a>
+                    <a href="sign-in.html" class="inline-flex items-center justify-center px-8 py-4 text-base font-medium text-white transition-all border-2 border-white rounded-xl hover:bg-white/10">
+                        已有账号？登录
+                    </a>
+                </div>
+            </div>
+            <div class="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full filter blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-800/30 rounded-full filter blur-3xl"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="px-4 py-12 mx-auto border-t max-w-7xl sm:px-6 lg:px-8 border-blue-200 dark:border-white/10">
+        <div class="text-center text-black dark:text-black">
+            <p>&copy; 2026 OmniAero-OBB. 面向全天候交通场景的无人机视角多模态小目标检测平台</p>
+            <p class="mt-2 text-sm">服务外包竞赛项目</p>
+        </div>
+    </footer>
+</div>
+
+<style>
+html {
+    scroll-behavior: smooth;
+}
+/* 指标选择按钮 */
+.metric-btn {
+    color: #3b82f6;
+    background: transparent;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+.dark .metric-btn { color: #9ca3af; }
+.metric-btn:hover {
+    background: rgba(6,182,212,0.15);
+    color: #0891b2;
+}
+.dark .metric-btn:hover { color: #22d3ee; background: rgba(6,182,212,0.15); }
+.active-metric {
+    background: linear-gradient(135deg, #06b6d4, #3b82f6) !important;
+    color: #fff !important;
+    box-shadow: 0 0 12px rgba(6,182,212,0.45);
+}
+@keyframes marquee-ltr {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+@keyframes scroll-up {
+    0%   { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+}
+@keyframes scan-line {
+    0%   { top: -4px; opacity: 0; }
+    10%  { opacity: 0.6; }
+    90%  { opacity: 0.6; }
+    100% { top: 100%; opacity: 0; }
+}
+
+/* 数字/标签 A组（detect-1&2，0-50%可见）*/
+@keyframes data-group-a {
+    0%      { opacity: 1; transform: translateY(0); }
+    44%     { opacity: 1; transform: translateY(0); }
+    50%     { opacity: 0; transform: translateY(-6px); }
+    94%     { opacity: 0; transform: translateY(-6px); }
+    100%    { opacity: 1; transform: translateY(0); }
+}
+
+/* 数字/标签 B组（detect-3&4，50-100%可见）*/
+@keyframes data-group-b {
+    0%      { opacity: 0; transform: translateY(6px); }
+    44%     { opacity: 0; transform: translateY(6px); }
+    50%     { opacity: 1; transform: translateY(0); }
+    94%     { opacity: 1; transform: translateY(0); }
+    100%    { opacity: 0; transform: translateY(6px); }
+}
+
+/* 进度条 A组 */
+@keyframes bar-bus-a     { 0%,44%{ width:38%; opacity:1; } 50%,94%{ width:22%; opacity:0; } 100%{ width:38%; opacity:1; } }
+@keyframes bar-car-a     { 0%,44%{ width:89%; opacity:1; } 50%,94%{ width:67%; opacity:0; } 100%{ width:89%; opacity:1; } }
+@keyframes bar-freight-a { 0%,44%{ width:29%; opacity:1; } 50%,94%{ width:51%; opacity:0; } 100%{ width:29%; opacity:1; } }
+@keyframes bar-truck-a   { 0%,44%{ width:19%; opacity:1; } 50%,94%{ width:35%; opacity:0; } 100%{ width:19%; opacity:1; } }
+@keyframes bar-van-a     { 0%,44%{ width:19%; opacity:1; } 50%,94%{ width:28%; opacity:0; } 100%{ width:19%; opacity:1; } }
+
+/* 进度条 B组 */
+@keyframes bar-bus-b     { 0%,44%{ width:38%; opacity:0; } 50%,94%{ width:22%; opacity:1; } 100%{ width:38%; opacity:0; } }
+@keyframes bar-car-b     { 0%,44%{ width:89%; opacity:0; } 50%,94%{ width:67%; opacity:1; } 100%{ width:89%; opacity:0; } }
+@keyframes bar-freight-b { 0%,44%{ width:29%; opacity:0; } 50%,94%{ width:51%; opacity:1; } 100%{ width:29%; opacity:0; } }
+@keyframes bar-truck-b   { 0%,44%{ width:19%; opacity:0; } 50%,94%{ width:35%; opacity:1; } 100%{ width:19%; opacity:0; } }
+@keyframes bar-van-b     { 0%,44%{ width:19%; opacity:0; } 50%,94%{ width:28%; opacity:1; } 100%{ width:19%; opacity:0; } }
+</style>
+
+<script>
+// ===== 模型对比图表 =====
+var METRICS = {
+    map05: {
+        name: 'mAP@0.5',
+        desc: '目标检测平均精度（IoU=0.5）',
+        unit: '%',
+        higher: true,
+        max: 100,
+        ticks: ['0', '25%', '50%', '75%', '100%'],
+        data: [
+            { model: 'OmniAero-OBB', val: 92.3, ours: true },
+            { model: 'YOLOv8-OBB',   val: 87.1, ours: false },
+            { model: 'RT-DETR',       val: 85.6, ours: false },
+            { model: 'FasterRCNN',    val: 80.3, ours: false }
+        ]
+    },
+    map5095: {
+        name: 'mAP@0.5:0.95',
+        desc: '严格精度均值（多IoU阈值）',
+        unit: '%',
+        higher: true,
+        max: 80,
+        ticks: ['0', '20%', '40%', '60%', '80%'],
+        data: [
+            { model: 'OmniAero-OBB', val: 68.7, ours: true },
+            { model: 'YOLOv8-OBB',   val: 61.4, ours: false },
+            { model: 'RT-DETR',       val: 59.2, ours: false },
+            { model: 'FasterRCNN',    val: 54.1, ours: false }
+        ]
+    },
+    fps: {
+        name: 'FPS',
+        desc: '每秒推理帧数（RTX 3080）',
+        unit: ' fps',
+        higher: true,
+        max: 60,
+        ticks: ['0', '15', '30', '45', '60'],
+        data: [
+            { model: 'OmniAero-OBB', val: 47, ours: true },
+            { model: 'YOLOv8-OBB',   val: 52, ours: false },
+            { model: 'RT-DETR',       val: 38, ours: false },
+            { model: 'FasterRCNN',    val: 18, ours: false }
+        ]
+    },
+    params: {
+        name: '参数量',
+        desc: '模型参数规模（百万）',
+        unit: 'M',
+        higher: false,
+        max: 80,
+        ticks: ['0', '20M', '40M', '60M', '80M'],
+        data: [
+            { model: 'OmniAero-OBB', val: 28.6, ours: true },
+            { model: 'YOLOv8-OBB',   val: 43.7, ours: false },
+            { model: 'RT-DETR',       val: 67.0, ours: false },
+            { model: 'FasterRCNN',    val: 41.4, ours: false }
+        ]
+    }
+};
+
+var currentMetric = 'map05';
+
+function switchMetric(key) {
+    if (key === currentMetric) return;
+    currentMetric = key;
+    // 更新按钮状态
+    document.querySelectorAll('.metric-btn').forEach(function(b) {
+        b.classList.remove('active-metric');
+    });
+    document.getElementById('btn-' + key).classList.add('active-metric');
+    renderChart(key, true);
+}
+
+function renderChart(key, animate) {
+    var m = METRICS[key];
+    document.getElementById('chart-metric-name').textContent = m.name;
+    document.getElementById('chart-metric-desc').textContent = m.desc;
+    // 方向提示
+    var hint = document.querySelector('#chart-bars');
+    // 刻度
+    var ticks = m.ticks;
+    ['tick-0','tick-25','tick-50','tick-75','tick-100'].forEach(function(id, i) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = ticks[i];
+    });
+    // 排序（高亮ours始终第一，其余按值降序）
+    var sorted = m.data.slice().sort(function(a,b) {
+        return m.higher ? b.val - a.val : a.val - b.val;
+    });
+    // 找最佳值用于标注
+    var bestVal = sorted[0].val;
+
+    var colors = [
+        { bar: 'from-cyan-500 to-blue-500',   glow: 'rgba(6,182,212,0.35)',  text: 'text-cyan-500 dark:text-cyan-400' },
+        { bar: 'from-blue-400 to-purple-500', glow: 'rgba(99,102,241,0.25)', text: 'text-blue-500 dark:text-blue-300' },
+        { bar: 'from-slate-400 to-blue-400',  glow: 'rgba(100,116,139,0.2)', text: 'text-slate-500 dark:text-slate-400' },
+        { bar: 'from-slate-300 to-slate-400', glow: 'rgba(100,116,139,0.1)', text: 'text-slate-400 dark:text-slate-500' }
+    ];
+
+    var html = '';
+    sorted.forEach(function(item, i) {
+        var pct = Math.round(item.val / m.max * 100);
+        var c = item.ours ? colors[0] : colors[Math.min(i, 3)];
+        var isBest = (item.val === bestVal);
+        var labelVal = item.val + m.unit;
+        html += '<div class="flex items-center space-x-3 group">';
+        // 模型名
+        html += '<div class="w-28 flex-shrink-0 flex items-center space-x-1.5">';
+        if (item.ours) html += '<span class="px-1.5 py-0.5 text-xs font-bold text-white rounded bg-gradient-to-r from-cyan-500 to-blue-600 leading-none">OURS</span>';
+        html += '<span class="text-xs font-mono font-medium text-blue-800 dark:text-gray-300 truncate">' + item.model + '</span></div>';
+        // 进度条轨道
+        html += '<div class="flex-1 relative h-7 rounded-lg bg-blue-50 dark:bg-white/5 overflow-hidden">';
+        // 网格线
+        html += '<div class="absolute inset-0 flex justify-between pointer-events-none">';
+        for (var g = 0; g <= 4; g++) {
+            html += '<div class="w-px h-full bg-blue-100 dark:bg-white/5"></div>';
+        }
+        html += '</div>';
+        // 发光条
+        html += '<div class="absolute inset-y-1 left-0 rounded-md bg-gradient-to-r ' + c.bar + ' transition-all duration-700 ease-out flex items-center justify-end pr-2" style="width:' + (animate ? '0' : pct) + '%; box-shadow: 0 0 10px ' + c.glow + ';" data-target="' + pct + '">';
+        // 条内数值
+        if (pct > 18) {
+            html += '<span class="text-xs font-mono font-bold text-white/90 whitespace-nowrap">' + labelVal + '</span>';
+        }
+        html += '</div>';
+        // 条外数值（短条时显示）
+        if (pct <= 18) {
+            html += '<span class="absolute left-[calc(' + pct + '%+6px)] top-1/2 -translate-y-1/2 text-xs font-mono font-bold ' + c.text + ' whitespace-nowrap">' + labelVal + '</span>';
+        }
+        // 最佳标记
+        if (isBest) {
+            html += '<div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center space-x-1"><span class="text-xs font-mono text-cyan-500 dark:text-cyan-400 font-bold">★ BEST</span></div>';
+        }
+        html += '</div>'; // 轨道
+        html += '</div>'; // 行
+    });
+    hint.innerHTML = html;
+
+    // 触发动画
+    if (animate) {
+        requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+                hint.querySelectorAll('[data-target]').forEach(function(el) {
+                    el.style.width = el.getAttribute('data-target') + '%';
+                });
+            });
+        });
+    } else {
+        hint.querySelectorAll('[data-target]').forEach(function(el) {
+            el.style.width = el.getAttribute('data-target') + '%';
+        });
+    }
+}
+
+// 页面加载后初始化
+document.addEventListener('DOMContentLoaded', function() {
+    renderChart('map05', true);
+});
+// ===== 导航栏滚动逻辑 =====
+(function() {
+    var nav = document.querySelector('nav.fixed');
+    var gallery = document.getElementById('gallery');
+    if (!nav || !gallery) return;
+
+    function updateNav() {
+        var scrollY = window.scrollY || window.pageYOffset;
+        if (scrollY < 10) {
+            // 在顶部：恢复为普通流式定位
+            nav.classList.remove('fixed', 'top-0', 'left-0', 'right-0', 'shadow-sm');
+            nav.classList.add('relative');
+            gallery.classList.remove('mt-20');
+        } else {
+            // 离开顶部：固定在顶部
+            nav.classList.remove('relative');
+            nav.classList.add('fixed', 'top-0', 'left-0', 'right-0', 'shadow-sm');
+            gallery.classList.add('mt-20');
+        }
+    }
+
+    window.addEventListener('scroll', updateNav, { passive: true });
+    updateNav();
+})();
+</script>
+
+</body>
+</html>
