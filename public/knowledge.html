@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知识库 - OmniAero-OBB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        /* 复用控制台的核心变量与夜间模式 (Gemini 风格) */
+        :root {
+          --cc: #06b6d4; --cb: #3b82f6; --bd: #eff6ff; --bp: rgba(255, 255, 255, 0.85);
+          --bk: #f8fafc; --br: rgba(191, 219, 254, 0.8); --brd: rgba(219, 234, 254, 0.8);
+          --ct: #1e3a8a; --cm: #475569; --cs: #10b981; --cw: #f59e0b;
+        }
+        body { margin: 0; background-color: var(--bd); font-family: 'Inter', system-ui, sans-serif; color: var(--ct); transition: background-color 0.3s; }
+        
+        body.dark-mode {
+          --bd: #131314; --bp: rgba(30, 30, 32, 0.85); --bk: #1e1e20;
+          --br: rgba(68, 71, 70, 0.8); --brd: rgba(68, 71, 70, 0.5);
+          --ct: #e3e3e3; --cm: #c4c7c5; --cc: #a8c7fa; --cb: #a8c7fa;
+        }
+        
+        .dr { background: linear-gradient(135deg, #eff6ff 0%, #ecfeff 50%, #dbeafe 100%); min-height: 100vh; }
+        body.dark-mode .dr { background: var(--bd); }
+        
+        .dash-header { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--br); padding: 12px 32px; display: flex; justify-content: space-between; align-items: center; }
+        body.dark-mode .dash-header { background: rgba(19, 19, 20, 0.85); border-bottom-color: var(--br); }
+
+        .cpanel { background: var(--bp); backdrop-filter: blur(8px); border: 1px solid var(--br); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        body.dark-mode .cpanel { background: #1e1e20; border-color: var(--brd); }
+
+        /* 左侧菜单栏样式 */
+        .menu-item { padding: 10px 16px; margin: 4px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--cm); cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+        .menu-item:hover { background: rgba(59,130,246,0.08); color: var(--cb); }
+        .menu-item.active { background: rgba(59,130,246,0.15); color: var(--cb); font-weight: 700; }
+        body.dark-mode .menu-item:hover { background: rgba(168, 199, 250, 0.08); color: var(--ct); }
+        body.dark-mode .menu-item.active { background: rgba(168, 199, 250, 0.15); color: var(--cb); }
+
+        /* Markdown 阅读区美化 */
+        .markdown-body { padding: 32px 40px; font-size: 14px; line-height: 1.7; color: var(--ct); }
+        .markdown-body h1 { font-size: 28px; font-weight: 800; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--brd); }
+        .markdown-body h2 { font-size: 20px; font-weight: 700; margin: 32px 0 16px; color: var(--cb); }
+        .markdown-body h3 { font-size: 16px; font-weight: 700; margin: 24px 0 12px; }
+        .markdown-body p { margin-bottom: 16px; }
+        .markdown-body ul, .markdown-body ol { margin-bottom: 16px; padding-left: 24px; }
+        .markdown-body li { margin-bottom: 6px; }
+        .markdown-body code { background: rgba(59,130,246,0.1); color: var(--cb); padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 13px; }
+        .markdown-body pre { background: #1e293b; color: #f8fafc; padding: 16px; border-radius: 8px; overflow-x: auto; margin: 20px 0; }
+        .markdown-body pre code { background: transparent; color: inherit; padding: 0; }
+        body.dark-mode .markdown-body code { background: rgba(255,255,255,0.1); }
+        body.dark-mode .markdown-body pre { background: #000; border: 1px solid var(--brd); }
+        .markdown-body blockquote { border-left: 4px solid var(--cb); padding-left: 16px; color: var(--cm); margin: 0 0 16px 0; background: rgba(59,130,246,0.05); padding: 12px 16px; border-radius: 0 8px 8px 0; }
+    </style>
+</head>
+<body>
+
+<header class="dash-header">
+  <div style="display:flex; align-items:center; gap: 12px;">
+    <img src="assets/images/logo.png" alt="Logo" style="width: 36px; height: 36px; border-radius: 8px; object-fit: cover; background: #e0f2fe; border: 1px solid var(--brd);">
+    <span style="font-size: 20px; font-weight: 800; color: var(--ct);">OmniAero-OBB</span>
+  </div>
+  
+<div style="display:flex; align-items:center; background:rgba(59,130,246,0.08); padding:4px; border-radius:12px; border:1px solid rgba(59,130,246,0.1); position: absolute; left: 50%; transform: translateX(-50%);">
+    
+    <a href="dashboard.html" style="padding:6px 20px; border-radius:8px; font-size:13px; font-weight:600; color:var(--cm); text-decoration:none; display:flex; align-items:center; gap:6px; transition:all 0.2s;" onmouseover="this.style.color='var(--cb)'" onmouseout="this.style.color='var(--cm)'">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg> 控制台
+    </a>
+    
+    <a href="map.html" style="padding:6px 20px; border-radius:8px; font-size:13px; font-weight:600; color:var(--cm); text-decoration:none; display:flex; align-items:center; gap:6px; transition:all 0.2s;" onmouseover="this.style.color='var(--cb)'" onmouseout="this.style.color='var(--cm)'">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg> 天眼 GIS
+    </a>
+
+    <a href="knowledge.html" style="padding:6px 20px; border-radius:8px; font-size:13px; font-weight:700; color:var(--cb); background:#fff; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-decoration:none; display:flex; align-items:center; gap:6px;">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg> 知识库
+    </a>
+
+  </div>
+
+  <div style="display:flex; align-items:center; gap: 16px;">
+    <button onclick="toggleTheme()" style="background:transparent; border:none; cursor:pointer; color:var(--cm); padding:6px; border-radius:50%; transition:background 0.2s;" onmouseover="this.style.background='var(--brd)'" onmouseout="this.style.background='transparent'">
+        <svg id="theme-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+    </button>
+    <div style="width: 1px; height: 20px; background: var(--br);"></div>
+    <div style="display:flex; align-items:center; gap: 10px;">
+      <div style="display:flex; flex-direction: column; align-items: flex-end;">
+        <span style="font-size: 13px; font-weight: 700; color: var(--ct); line-height: 1;">Admin User</span>
+        <span style="font-size: 10px; color: var(--cm); margin-top: 3px;">admin@omniaero.com</span>
+      </div>
+      <img src="https://ui-avatars.com/api/?name=Admin+User&background=0ea5e9&color=fff&rounded=true&bold=true" style="width: 38px; height: 38px; border-radius: 50%;">
+    </div>
+  </div>
+</header>
+
+<div class="dr"><div style="max-width: 1400px; margin: 0 auto; padding: 32px 16px;">
+    <div style="display:grid; grid-template-columns: 280px 1fr; gap: 24px; align-items: start;">
+        
+        <div class="cpanel" style="padding: 16px 0; position: sticky; top: 100px;">
+            <div style="padding: 0 24px 12px; font-size: 11px; font-weight: 800; color: var(--cm); letter-spacing: 1px;">📖 目录导航</div>
+            <div id="menu-container">
+                </div>
+        </div>
+
+        <div class="cpanel markdown-body" id="content-area" style="min-height: 600px;">
+            </div>
+
+    </div>
+</div></div>
+
+<script>
+// --- 内容数据库 (Markdown格式) ---
+const docs = {
+    'quickstart': {
+        title: "🚀 快速入门",
+        content: `
+# 快速入门指南
+
+欢迎使用 **OmniAero-OBB** 无人机多模态小目标检测平台！本平台专为复杂场景下的交通流量监控与路面隐患排查设计。
+
+## 1. 图像上传
+平台支持两种模态的图像输入：
+* **RGB 可见光图像**：适用于白天的常规检测。
+* **IR 红外热成像图像**：适用于夜间或浓雾环境。
+> **提示**：你可以直接将图片拖拽到面板左侧的虚线框内完成上传。
+
+## 2. 启动检测
+上传完成后，点击下方的 \`▶ 启动检测分析\`。
+系统会将图像发送至云端的OmniAero-OBB模型算力节点。推理完成后，你将在中间画板看到带有精确**旋转边界框 (OBB)** 的标注图像。
+
+## 3. 查看统计
+检测完成后，右侧面板会自动生成交通流量饼图和各车型（如公交车、小汽车、卡车等）的具体数量。
+        `
+    },
+    'models': {
+        title: "🧠 模型解析 (Model Zoo)",
+        content: `
+# 模型库与适用场景
+
+本平台内置了多种前沿的计算机视觉模型，您可以根据实际天气和算力需求随时切换。
+
+## 模型对比表
+
+| 模型名称 | 核心架构 | 优点 | 适用场景 |
+| :--- | :--- | :--- | :--- |
+| **OmniAero-OBB v2** | YOLOv8 + 多模态融合 | 极高精度，支持任意角度车辆 | 复杂路况、高空俯拍 |
+| **YOLOv8-OBB** | YOLOv8-OBB | 极致速度，帧率极高 | 晴天、算力受限设备 |
+| **RT-DETR** | Transformer | 无需 NMS，全局感受野强 | 密集车流拥堵场景 |
+
+## 智能环境感知
+如果您嫌手动切换麻烦，可以呼叫右侧边栏的 Agent 助手：
+输入 \`智能调参优化\`，Agent 会自动帮您把置信度 (Conf) 和 IoU 参数调整到当前模型的最优状态。
+        `
+    },
+    'copilot': {
+        title: "🤖 AI 助手全解",
+        content: `
+# 多智能体协同 (Multi-Agent)
+
+为了降低您的操作门槛，平台配备了“一文一武”两个强大的 AI 助手：
+
+### 1. 页面控制台 (Agent Sidebar)
+位于页面最右侧的悬浮窗，它是一个纯前端的自动化脚本机器人。
+**你可以对它下达指令**：
+* \`切换夜间模式\`：一键变为深色护眼模式。
+* \`导出结果\`：自动帮您下载检测结果大图。
+* \`生成报告\`：**最强功能**，它会呼叫另一个 AI 帮您写报告！
+
+### 2. 多模态视觉助手 (Vision Chat)
+位于页面正中间，接入了最强大的 **Qwen-VL-Max** 视觉大语言模型。
+**它能做什么？**
+不仅能聊天，它还能**看懂上面的检测图片**！
+你可以问它：*"帮我看看路面有没有坑洞？"* 它会直接返回带有红黄色警告、具体坐标和严重程度的精美数据卡片。
+        `
+    },
+    'faq': {
+        title: "❓ 常见问题 (FAQ)",
+        content: `
+# 常见问题解答
+
+### Q: 为什么点击启动检测后，一直在转圈？
+A: 可能是后端的 Python Flask 节点没有正常启动，或者 \`best.pt\` 权重文件未找到。请检查终端是否显示 \`SUCCESS_JSON\` 日志。
+
+### Q: 大模型助手回复报错 "API 拒绝响应"？
+A: 
+1. 请检查您的 \`.env\` 文件中是否配置了正确的 \`AI_API_KEY_QWEN\`。
+2. 请确保您的账户余额充足。
+3. 如果是在国内网络，建议使用国内代理或直接使用阿里云接口。
+
+### Q: 知识库和控制台的主题状态不同步？
+A: 我们在顶部导航栏右侧加入了 **主题切换按钮**（太阳/月亮图标），你可以随时点击它在白天和黑夜之间自由穿梭。
+        `
+    }
+};
+
+// --- 初始化与渲染逻辑 ---
+let currentDoc = 'quickstart';
+
+function renderMenu() {
+    const container = document.getElementById('menu-container');
+    container.innerHTML = '';
+    for (const key in docs) {
+        const div = document.createElement('div');
+        div.className = 'menu-item' + (key === currentDoc ? ' active' : '');
+        div.innerText = docs[key].title;
+        div.onclick = () => {
+            currentDoc = key;
+            renderMenu();
+            renderContent();
+        };
+        container.appendChild(div);
+    }
+}
+
+function renderContent() {
+    const area = document.getElementById('content-area');
+    // 使用 marked.js 将 Markdown 转换为 HTML
+    area.innerHTML = marked.parse(docs[currentDoc].content);
+}
+
+// --- 主题切换逻辑 (支持跨页面记忆) ---
+function toggleTheme() {
+    const isDark = document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    updateThemeIcon(isDark);
+}
+
+function updateThemeIcon(isDark) {
+    const icon = document.getElementById('theme-icon');
+    if(isDark) {
+        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 5.657l-.707-.707m12.728 0l-.707.707M6.343 18.343l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>'; // 太阳
+    } else {
+        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>'; // 月亮
+    }
+}
+
+// 页面加载时执行
+document.addEventListener('DOMContentLoaded', () => {
+    // 恢复主题记忆
+    if(localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        updateThemeIcon(true);
+    }
+    
+    // 配置 marked 选项
+    marked.setOptions({ breaks: true });
+    
+    // 渲染页面
+    renderMenu();
+    renderContent();
+});
+</script>
+</body>
+</html>

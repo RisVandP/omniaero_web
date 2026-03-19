@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天眼 GIS 指挥舱 - OmniAero</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        :root {
+          --bd: #131314; --bp: rgba(20, 20, 22, 0.85); --br: rgba(68, 71, 70, 0.6);
+          --ct: #e3e3e3; --cm: #94a3b8; --cc: #06b6d4; --cb: #3b82f6;
+        }
+        body { margin: 0; background-color: var(--bd); font-family: 'Inter', system-ui, sans-serif; color: var(--ct); overflow: hidden; }
+        
+        /* 顶部导航 (暗黑风) */
+        .dash-header { position: absolute; top: 0; width: 100%; z-index: 1000; background: rgba(19, 19, 20, 0.7); backdrop-filter: blur(12px); border-bottom: 1px solid var(--br); padding: 12px 32px; display: flex; justify-content: space-between; align-items: center; }
+
+        /* 地图容器 */
+        #map { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; background: #000; }
+
+        /* 悬浮控制面板 */
+        .float-panel { position: absolute; z-index: 1000; background: var(--bp); backdrop-filter: blur(12px); border: 1px solid var(--br); border-radius: 12px; padding: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+        .panel-left { top: 80px; left: 24px; width: 320px; }
+        .panel-right { top: 80px; right: 24px; width: 340px; bottom: 24px; display: flex; flex-direction: column; }
+
+        .panel-title { font-size: 13px; font-weight: 800; letter-spacing: 1px; color: var(--cc); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
+        
+        /* 机队列表 */
+        .drone-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
+        .drone-card:hover { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.3); }
+        .drone-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .drone-name { font-size: 14px; font-weight: 700; color: #fff; }
+        .drone-status { font-size: 10px; padding: 2px 6px; border-radius: 12px; background: rgba(16,185,129,0.2); color: #34d399; font-weight: bold; }
+        .drone-data { font-size: 11px; color: var(--cm); display: flex; justify-content: space-between; }
+
+        /* 报警列表 */
+        .alert-list { flex: 1; overflow-y: auto; padding-right: 4px; }
+        .alert-list::-webkit-scrollbar { width: 4px; }
+        .alert-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+        .alert-card { background: rgba(239,68,68,0.05); border-left: 3px solid #ef4444; border-radius: 4px 8px 8px 4px; padding: 12px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; }
+        .alert-card:hover { background: rgba(239,68,68,0.1); transform: translateX(-4px); }
+        .alert-card.warn { border-left-color: #f59e0b; background: rgba(245,158,11,0.05); }
+        .alert-title { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 4px; display: flex; justify-content: space-between; }
+        .alert-desc { font-size: 11px; color: var(--cm); line-height: 1.5; }
+        
+        /* 地图 Popup 弹窗暗黑化美化 */
+        .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: #1e1e20; color: #e3e3e3; border: 1px solid var(--br); box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .leaflet-popup-content { margin: 12px; line-height: 1.6; }
+        .popup-img { width: 100%; border-radius: 6px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .popup-tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); display: inline-block; margin-bottom: 6px; }
+
+        /* 发光动画呼吸点 */
+        .pulse-marker { width: 16px; height: 16px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); animation: pulseAlert 2s infinite; }
+        .pulse-marker.drone { background: #3b82f6; box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); animation: pulseDrone 2s infinite; }
+        @keyframes pulseAlert { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+        @keyframes pulseDrone { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
+    </style>
+</head>
+<body>
+
+<header class="dash-header">
+  <div style="display:flex; align-items:center; gap: 12px;">
+    <img src="assets/images/logo.png" alt="Logo" style="width: 36px; height: 36px; border-radius: 8px; background: #1e1e20; border: 1px solid var(--br);">
+    <span style="font-size: 20px; font-weight: 800; color: #fff;">OmniAero-OBB <span style="font-size:12px;color:var(--cc);font-weight:600;">GIS 大屏</span></span>
+  </div>
+  
+  <div style="display:flex; align-items:center; background:rgba(255,255,255,0.05); padding:4px; border-radius:12px; border:1px solid rgba(255,255,255,0.08); position: absolute; left: 50%; transform: translateX(-50%);">
+    <a href="dashboard.html" style="padding:6px 20px; border-radius:8px; font-size:13px; font-weight:600; color:var(--cm); text-decoration:none; display:flex; align-items:center; gap:6px;">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg> 控制台
+    </a>
+    <a href="map.html" style="padding:6px 20px; border-radius:8px; font-size:13px; font-weight:700; color:var(--cb); background:rgba(59,130,246,0.15); box-shadow:0 1px 3px rgba(0,0,0,0.1); text-decoration:none; display:flex; align-items:center; gap:6px;">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg> 天眼 GIS
+    </a>
+    <a href="knowledge.html" style="padding:6px 20px; border-radius:8px; font-size:13px; font-weight:600; color:var(--cm); text-decoration:none; display:flex; align-items:center; gap:6px;">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg> 知识库
+    </a>
+  </div>
+</header>
+
+<div id="map"></div>
+
+<div class="float-panel panel-left">
+    <div class="panel-title"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg> 在线无人机编队</div>
+    
+    <div class="drone-card" onclick="focusMap(30.2741, 120.1551)">
+        <div class="drone-header"><span class="drone-name">Drone-Alpha (市区)</span><span class="drone-status">巡航中</span></div>
+        <div class="drone-data"><span>🔋 86%</span><span>📡 强</span><span>ALT: 120m</span></div>
+    </div>
+    
+    <div class="drone-card" onclick="focusMap(30.2100, 120.2000)">
+        <div class="drone-header"><span class="drone-name">Drone-Beta (高速段)</span><span class="drone-status" style="background:rgba(245,158,11,0.2);color:#fbbf24;">分析中</span></div>
+        <div class="drone-data"><span>🔋 42%</span><span>📡 中</span><span>ALT: 85m</span></div>
+    </div>
+</div>
+
+<div class="float-panel panel-right">
+    <div class="panel-title" style="color:#ef4444;"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg> Vision AI 实时研判告警</div>
+    
+    <div class="alert-list">
+        <div class="alert-card" onclick="showAlertDetail(30.2811, 120.1481, '路面重度破损', 'Qwen-VL 识别到主干道中央存在深约 8/10 的坑洞，极易引发爆胎事故。')">
+            <div class="alert-title"><span>⚠️ 发现路坑 (重度)</span><span style="font-size:10px; color:#fca5a5;">刚刚</span></div>
+            <div class="alert-desc">坐标: [30.2811, 120.1481]<br>建议: 立即下发公路养护工单。</div>
+        </div>
+
+        <div class="alert-card warn" onclick="showAlertDetail(30.2200, 120.1800, '异常违停拥堵', '匝道口识别到 3 辆货车(Freight)违章停放，后方已有 10+ 辆轿车排队缓行。')">
+            <div class="alert-title"><span>🚧 交通拥堵 (中度)</span><span style="font-size:10px; color:#fcd34d;">3分钟前</span></div>
+            <div class="alert-desc">坐标: [30.2200, 120.1800]<br>建议: 调度交警前往疏导。</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. 初始化地图 (以杭州市为中心)
+    var map = L.map('map', { zoomControl: false }).setView([30.25, 120.16], 12);
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+    // 2. 挂载极其酷炫的 CartoDB 暗黑极客底图 (免费且无需 API Key)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OmniAero GIS Engine',
+        subdomains: 'abcd',
+        maxZoom: 20
+    }).addTo(map);
+
+    // 3. 自定义发光点标记 (利用 DivIcon 插入 HTML 动画)
+    var alertIcon = L.divIcon({ className: 'custom-div-icon', html: "<div class='pulse-marker'></div>", iconSize: [16, 16], iconAnchor: [8, 8] });
+    var droneIcon = L.divIcon({ className: 'custom-div-icon', html: "<div class='pulse-marker drone'></div>", iconSize: [16, 16], iconAnchor: [8, 8] });
+
+    // 4. 在地图上标出两架正在飞行的无人机
+    L.marker([30.2741, 120.1551], {icon: droneIcon}).addTo(map).bindPopup("<b>🚁 Drone-Alpha</b><br>当前高度: 120m");
+    L.marker([30.2100, 120.2000], {icon: droneIcon}).addTo(map).bindPopup("<b>🚁 Drone-Beta</b><br>当前高度: 85m");
+
+    // 5. 交互逻辑：点击列表，地图平滑移动并弹出 AI 报告
+    function focusMap(lat, lng) {
+        map.flyTo([lat, lng], 15, { animate: true, duration: 1.5 });
+    }
+
+    // 保存当前高亮的报警点，避免重复添加
+    var currentAlertMarker = null; 
+
+    function showAlertDetail(lat, lng, title, aiReport) {
+        focusMap(lat, lng);
+        
+        if(currentAlertMarker) map.removeLayer(currentAlertMarker);
+        
+        // 在地图上打下红色报警坐标
+        currentAlertMarker = L.marker([lat, lng], {icon: alertIcon}).addTo(map);
+        
+        // 组装酷炫的 Popup 弹窗 (模拟引入了一张 Dashboard 检测出来的图)
+        var popupHTML = `
+            <div style="width:220px;">
+                <div class="popup-tag">🚨 Vision Chat 智能研判</div>
+                <div style="font-size:14px;font-weight:bold;margin-bottom:6px;">${title}</div>
+                <div style="width:100%; height:120px; background:url('https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&q=80&w=400') center/cover; border-radius:6px; margin-bottom:8px;"></div>
+                <div style="font-size:12px; color:#94a3b8; line-height:1.5;">${aiReport}</div>
+                <button style="margin-top:10px; width:100%; padding:6px; background:#ef4444; color:#fff; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">生成派工单</button>
+            </div>
+        `;
+        
+        // 延迟一点等地图飞过去再弹窗
+        setTimeout(() => {
+            currentAlertMarker.bindPopup(popupHTML).openPopup();
+        }, 1500);
+    }
+</script>
+
+</body>
+</html>

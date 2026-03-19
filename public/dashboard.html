@@ -10,28 +10,99 @@
 
 <body>
 <style>
-  /* ====== 🌙 夜间模式 (Dark Mode) 样式覆盖 ====== */
+/* ====== 🌙 夜间模式 (Gemini 极简纯净风格) ====== */
 body.dark-mode {
-  --bd: #0f172a; /* Slate 900 极暗背景 */
-  --bp: rgba(30, 41, 59, 0.85); /* Slate 800 卡片背景 */
-  --bk: #1e293b; /* 卡片头部深色 */
-  --br: rgba(51, 65, 85, 0.8); /* Slate 700 边框 */
-  --brd: rgba(71, 85, 105, 0.8); /* 弱边框 */
-  --ct: #f8fafc; /* 主文本变白 */
-  --cm: #94a3b8; /* 副文本灰白 */
+  --bd: #131314; /* 极深灰/纯黑底色 (类似 Gemini 核心背景) */
+  --bp: rgba(30, 30, 32, 0.85); /* 面板卡片使用微微凸起的深灰 */
+  --bk: #1e1e20; /* 卡片头部底色 */
+  --br: rgba(68, 71, 70, 0.8); /* 统一的极简边框色 */
+  --brd: rgba(68, 71, 70, 0.5); /* 弱边框色 */
+  --ct: #e3e3e3; /* 主文本色 (柔和白，避免纯白刺眼) */
+  --cm: #c4c7c5; /* 副文本色 */
+  --cc: #a8c7fa; /* 强调色转为柔和的浅灰蓝 */
+  --cb: #a8c7fa; 
   background-color: var(--bd);
 }
-body.dark-mode .dr { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); }
-body.dark-mode .dash-header { background: rgba(15, 23, 42, 0.8); border-bottom-color: var(--br); }
-body.dark-mode .mcard, body.dark-mode .ccard { background: #1e293b; }
-body.dark-mode .sbtn { background: #1e293b; color: #cbd5e1; }
-body.dark-mode .uzone { background: rgba(255, 255, 255, 0.05); }
-body.dark-mode .logc { background: #1e293b; color: #cbd5e1; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); }
-body.dark-mode #main-chat-box, body.dark-mode .agent-chat { background: #0f172a; }
-body.dark-mode .agent-input-area, body.dark-mode #agent-sidebar { background: rgba(30, 41, 59, 0.95); border-color: var(--br); }
-body.dark-mode .msg.agent .msg-bubble { background: #1e293b; color: #f8fafc; border-color: #334155; }
-body.dark-mode .qa-btn { background: #1e293b; color: #cbd5e1; border-color: #334155; }
-body.dark-mode .qa-btn:hover { background: rgba(6,182,212,0.15); }
+
+/* 去除花哨的背景渐变，回归纯色 */
+body.dark-mode .dr { background: var(--bd); } 
+body.dark-mode .dash-header { background: rgba(19, 19, 20, 0.85); border-bottom-color: var(--br); }
+
+/* 卡片与按钮统一扁平深色化 */
+body.dark-mode .mcard, body.dark-mode .ccard { background: #1e1e20; border-color: var(--brd); }
+body.dark-mode .mcard.sel { border-color: var(--cc); background: rgba(168, 199, 250, 0.08); }
+body.dark-mode .sbtn { background: #1e1e20; color: var(--cm); border-color: var(--brd); }
+body.dark-mode .uzone { background: rgba(255, 255, 255, 0.02); border-color: var(--br); }
+
+/* 日志与聊天区背景沉浸化 */
+body.dark-mode .logc { background: #1e1e20; color: var(--cm); box-shadow: none; border-color: var(--brd); }
+body.dark-mode #main-chat-box, body.dark-mode .agent-chat { background: var(--bd); }
+body.dark-mode .agent-input-area, body.dark-mode #agent-sidebar { background: #1e1e20; border-color: var(--br); }
+
+/* 聊天气泡极简处理 */
+body.dark-mode .msg.agent .msg-bubble { background: #1e1e20; color: var(--ct); border-color: var(--brd); }
+/* 用户气泡去掉鲜艳渐变，改为低调的高级深灰 */
+body.dark-mode .msg.user .msg-bubble { background: #333639; color: var(--ct); border: none; box-shadow: none; }
+
+/* 输入框与快捷按钮 */
+body.dark-mode .qa-btn { background: #131314; color: var(--cm); border-color: var(--brd); }
+body.dark-mode .qa-btn:hover { background: #333639; color: var(--ct); }
+body.dark-mode .agent-input-wrap { background: #131314; border-color: var(--br); }
+body.dark-mode .agent-input-wrap:focus-within { border-color: var(--cc); }
+body.dark-mode #main-chat-input { background: #131314; color: var(--ct); border-color: var(--br); }
+body.dark-mode .cph { background: #1e1e20; border-bottom: 1px solid var(--brd); }
+
+/* Markdown 专属适配 */
+body.dark-mode .markdown-body code { background: rgba(255, 255, 255, 0.1); color: #a8c7fa; }
+body.dark-mode .markdown-body pre { background: #000000; border: 1px solid var(--brd); }
+/* ====== 🌙 修复夜间模式下的内联白色遗漏块 (强力覆盖) ====== */
+
+/* 1. 修复：检测结果画板的灰色占位背景 */
+body.dark-mode .riw { background: #131314 !important; border-color: var(--brd) !important; }
+
+/* 2. 修复：Vision Chat 头部的白色渐变与下拉框 */
+body.dark-mode .cpanel > .cph { background: #1e1e20 !important; border-bottom-color: var(--brd) !important; }
+body.dark-mode #main-llm-selector { background: #131314 !important; border-color: var(--brd) !important; color: var(--ct) !important; }
+
+/* 3. 修复：Vision Chat 聊天区与底部输入区的纯白背景 */
+body.dark-mode #main-chat-box { background: #131314 !important; }
+body.dark-mode #main-chat-box + div { background: #1e1e20 !important; border-top-color: var(--brd) !important; }
+
+/* 4. 修复：AI 聊天气泡的纯白背景 */
+body.dark-mode #main-chat-box .msg.agent .msg-bubble { background: #1e1e20 !important; border-color: var(--brd) !important; color: var(--ct) !important; }
+
+/* 5. 修复：JSON 数据渲染卡片 (路坑警告、总结报告等) */
+/* 浅紫色/浅蓝色的回答区 -> 转换为深色霓虹紫 */
+body.dark-mode #main-chat-box div[style*="background:#f3e8ff"],
+body.dark-mode #main-chat-box div[style*="background:#e0f2fe"] { 
+    background: rgba(168, 85, 247, 0.15) !important; 
+    border-color: rgba(168, 85, 247, 0.4) !important; 
+    color: #d8b4fe !important; 
+}
+/* 纯白底色的路坑警告卡片 -> 转换为深灰色卡片 */
+body.dark-mode #main-chat-box div[style*="background:#fff"] { 
+    background: #1e1e20 !important; 
+    border-color: var(--brd) !important; 
+    color: var(--cm) !important; 
+}
+/* 浅灰底色的总结报告 -> 转换为极暗背景 */
+body.dark-mode #main-chat-box div[style*="background:#f8fafc"],
+body.dark-mode #main-chat-box div[style*="background:#f1f5f9"] { 
+    background: #131314 !important; 
+    color: var(--cm) !important; 
+    border-color: var(--brd) !important; 
+}
+/* 6. 修复：统计面板右下角的性能信息白框 */
+body.dark-mode div[style*="background:#f8fafc"] { 
+    background: #1e1e20 !important; 
+    border-color: var(--brd) !important; 
+}
+
+/* 7. 修复：性能信息框内部的细分割线 */
+body.dark-mode div[style*="background:#e2e8f0"] { 
+    background: var(--brd) !important; 
+}
+/* ========================================= */
 /* ========================================= */
 /* ====== 适配首页浅色风格的 CSS 变量 ====== */
 :root {
@@ -693,16 +764,26 @@ body { margin: 0; padding: 0; background-color: var(--bd); }
 <!-- 顶部 Header -->
 <header class="dash-header">
   <div style="display:flex; align-items:center; gap: 12px;">
-    <!-- Logo 图片占位 -->
     <img src="assets/images/logo.png" alt="Logo" style="width: 36px; height: 36px; border-radius: 8px; object-fit: cover; background: #e0f2fe; border: 1px solid var(--brd);">
     <span style="font-size: 20px; font-weight: 800; color: var(--ct);">OmniAero-OBB</span>
   </div>
   
+<div style="display:flex; align-items:center; background:rgba(59,130,246,0.08); padding:4px; border-radius:12px; border:1px solid rgba(59,130,246,0.1); position: absolute; left: 50%; transform: translateX(-50%);">
+    <a href="dashboard.html" style="padding:6px 20px; border-radius:8px; font-size:13px; font-weight:700; color:var(--cb); background:#fff; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-decoration:none; display:flex; align-items:center; gap:6px;">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg> 控制台
+    </a>
+    <a href="map.html" style="padding:6px 20px; border-radius:8px; font-size:13px; font-weight:600; color:var(--cm); text-decoration:none; display:flex; align-items:center; gap:6px; transition:all 0.2s;" onmouseover="this.style.color='var(--cb)'" onmouseout="this.style.color='var(--cm)'">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg> 天眼 GIS
+    </a>
+    <a href="knowledge.html" style="padding:6px 20px; border-radius:8px; font-size:13px; font-weight:600; color:var(--cm); text-decoration:none; display:flex; align-items:center; gap:6px; transition:all 0.2s;" onmouseover="this.style.color='var(--cb)'" onmouseout="this.style.color='var(--cm)'">
+      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg> 知识库
+    </a>
+  </div>
+
   <div style="display:flex; align-items:center; gap: 16px;">
     <a href="/" style="font-size: 13px; font-weight: 600; color: var(--cb); text-decoration: none;">返回官网</a>
     <div style="width: 1px; height: 20px; background: var(--br);"></div>
-    <!-- 用户头像区域 -->
-    <div style="display:flex; align-items:center; gap: 10px; cursor: pointer; padding: 4px 8px; border-radius: 8px; transition: background 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
+    <div style="display:flex; align-items:center; gap: 10px; cursor: pointer; padding: 4px 8px; border-radius: 8px; transition: background 0.2s;" onmouseover="this.style.background='var(--brd)'" onmouseout="this.style.background='transparent'">
       <div style="display:flex; flex-direction: column; align-items: flex-end;">
         <span style="font-size: 13px; font-weight: 700; color: var(--ct); line-height: 1;">Admin User</span>
         <span style="font-size: 10px; color: var(--cm); margin-top: 3px;">admin@omniaero.com</span>
