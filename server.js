@@ -17,6 +17,6 @@ app.use('/api/chat', chatRoutes); // 把 AI 对话请求交给 chat.js
 app.use('/api/detection', detectionRoutes);
 // 3. 启动服务
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0',() => {
     console.log(`🚀 无人机平台后端已启动，正在监听端口: http://localhost:${PORT}`);
 });

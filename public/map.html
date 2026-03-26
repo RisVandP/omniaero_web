@@ -3,166 +3,526 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>天眼 GIS 指挥舱 - OmniAero</title>
+    <title>天眼 GIS 指挥舱 - 百度地图 3D 版</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js"></script>
+    
     <style>
-        :root {
-          --bd: #131314; --bp: rgba(20, 20, 22, 0.85); --br: rgba(68, 71, 70, 0.6);
-          --ct: #e3e3e3; --cm: #94a3b8; --cc: #06b6d4; --cb: #3b82f6;
-        }
-        body { margin: 0; background-color: var(--bd); font-family: 'Inter', system-ui, sans-serif; color: var(--ct); overflow: hidden; }
+        :root { --cc: #06b6d4; var(--cb): #3b82f6; --bd: #eff6ff; --br: rgba(191, 219, 254, 0.8); --ct: #1e3a8a; --cm: #475569; }
+        body { margin: 0; padding: 0; background-color: var(--bd); font-family: 'Inter', system-ui, sans-serif; color: var(--ct); overflow: hidden; }
         
-        /* 顶部导航 (暗黑风) */
-        .dash-header { position: absolute; top: 0; width: 100%; z-index: 1000; background: rgba(19, 19, 20, 0.7); backdrop-filter: blur(12px); border-bottom: 1px solid var(--br); padding: 12px 32px; display: flex; justify-content: space-between; align-items: center; }
+        .dash-header { position: absolute; top: 0; width: 100%; z-index: 1000; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--br); padding: 12px 32px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+        #map { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
 
-        /* 地图容器 */
-        #map { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; background: #000; }
-
-        /* 悬浮控制面板 */
-        .float-panel { position: absolute; z-index: 1000; background: var(--bp); backdrop-filter: blur(12px); border: 1px solid var(--br); border-radius: 12px; padding: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+        .float-panel { position: absolute; z-index: 1000; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); border: 1px solid var(--br); border-radius: 16px; padding: 16px; box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.05); transition: all 0.3s ease; }
         .panel-left { top: 80px; left: 24px; width: 320px; }
-        .panel-right { top: 80px; right: 24px; width: 340px; bottom: 24px; display: flex; flex-direction: column; }
+        .panel-right { top: 80px; right: 24px; width: 340px; } 
 
-        .panel-title { font-size: 13px; font-weight: 800; letter-spacing: 1px; color: var(--cc); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
-        
-        /* 机队列表 */
-        .drone-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
-        .drone-card:hover { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.3); }
+        .panel-title { font-size: 14px; font-weight: 700; color: #3b82f6; margin-bottom: 0px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+        .panel-content { margin-top: 16px; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, margin 0.3s ease; max-height: 500px; opacity: 1; overflow-y: auto; overflow-x: hidden; }
+        .panel-content.collapsed { max-height: 0px; opacity: 0; margin-top: 0; overflow: hidden; pointer-events: none; }
+        .toggle-icon { font-size: 12px; color: var(--cm); transition: transform 0.3s ease; }
+        .toggle-icon.collapsed { transform: rotate(-90deg); } 
+
+        .drone-card { background: rgba(59, 130, 246, 0.03); border: 1px solid rgba(191, 219, 254, 0.5); border-radius: 8px; padding: 12px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
+        .drone-card:hover { background: rgba(59, 130, 246, 0.08); border-color: rgba(59, 130, 246, 0.3); }
         .drone-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .drone-name { font-size: 14px; font-weight: 700; color: #fff; }
-        .drone-status { font-size: 10px; padding: 2px 6px; border-radius: 12px; background: rgba(16,185,129,0.2); color: #34d399; font-weight: bold; }
+        .drone-name { font-size: 14px; font-weight: 700; color: var(--ct); }
+        .drone-status { font-size: 10px; padding: 4px 10px; border-radius: 12px; background: #d1fae5; color: #059669; border: 1px solid #34d399; font-weight: 600; }
         .drone-data { font-size: 11px; color: var(--cm); display: flex; justify-content: space-between; }
 
-        /* 报警列表 */
-        .alert-list { flex: 1; overflow-y: auto; padding-right: 4px; }
-        .alert-list::-webkit-scrollbar { width: 4px; }
-        .alert-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
-        .alert-card { background: rgba(239,68,68,0.05); border-left: 3px solid #ef4444; border-radius: 4px 8px 8px 4px; padding: 12px; margin-bottom: 12px; cursor: pointer; transition: all 0.2s; }
-        .alert-card:hover { background: rgba(239,68,68,0.1); transform: translateX(-4px); }
-        .alert-card.warn { border-left-color: #f59e0b; background: rgba(245,158,11,0.05); }
-        .alert-title { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 4px; display: flex; justify-content: space-between; }
-        .alert-desc { font-size: 11px; color: var(--cm); line-height: 1.5; }
-        
-        /* 地图 Popup 弹窗暗黑化美化 */
-        .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: #1e1e20; color: #e3e3e3; border: 1px solid var(--br); box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
-        .leaflet-popup-content { margin: 12px; line-height: 1.6; }
-        .popup-img { width: 100%; border-radius: 6px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.1); }
-        .popup-tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); display: inline-block; margin-bottom: 6px; }
+        .alert-category { margin-bottom: 16px; }
+        .alert-category-title { font-size: 12px; font-weight: bold; margin-bottom: 0px; padding-bottom: 8px; padding-top: 8px; border-bottom: 1px solid var(--br); display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+        .sub-content { transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease; max-height: 800px; opacity: 1; overflow: hidden; margin-top: 8px; }
+        .sub-content.collapsed { max-height: 0px; opacity: 0; margin-top: 0; pointer-events: none; }
+        .alert-drop-zone { min-height: 50px; padding-bottom: 10px; transition: background 0.2s; border-radius: 8px; }
+        .alert-drop-zone.drag-over { background: rgba(0,0,0,0.05); border: 1px dashed var(--cb); }
 
-        /* 发光动画呼吸点 */
-        .pulse-marker { width: 16px; height: 16px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); animation: pulseAlert 2s infinite; }
-        .pulse-marker.drone { background: #3b82f6; box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); animation: pulseDrone 2s infinite; }
-        @keyframes pulseAlert { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
-        @keyframes pulseDrone { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
+        .alert-card { border-radius: 4px 8px 8px 4px; padding: 12px; margin-bottom: 12px; cursor: grab; transition: transform 0.2s, background 0.2s, border-color 0.2s; user-select: none; }
+        .alert-card:active { cursor: grabbing; }
+        .alert-card.dragging { opacity: 0.5; transform: scale(0.95); } 
+        
+        .alert-title { font-size: 13px; font-weight: 700; color: var(--ct); margin-bottom: 4px; display: flex; justify-content: space-between; }
+
+        .alert-card.danger { background: rgba(239, 68, 68, 0.08); border-left: 3px solid #ef4444; }
+        .alert-card.danger:hover { background: rgba(239, 68, 68, 0.12); }
+        .alert-card.danger .alert-title { color: #ef4444; }
+        .alert-card.warning { background: rgba(245, 158, 11, 0.08); border-left: 3px solid #f59e0b; }
+        .alert-card.warning:hover { background: rgba(245, 158, 11, 0.12); }
+        .alert-card.warning .alert-title { color: #d97706; }
+        .alert-card.info { background: rgba(16, 185, 129, 0.08); border-left: 3px solid #10b981; }
+        .alert-card.info:hover { background: rgba(16, 185, 129, 0.12); }
+        .alert-card.info .alert-title { color: #059669; }
+
+        .radar-dot { width: 14px; height: 14px; border-radius: 50%; background: #3b82f6; position: absolute; animation: pulseRadar 2s infinite; cursor: pointer; z-index: 10; }
+        @keyframes pulseRadar { 0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.8); } 70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(59, 130, 246, 0); } 100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
+
+        .aura-ring { width: 40px; height: 40px; border-radius: 50%; background: radial-gradient(circle, rgba(6, 182, 212, 0.4) 0%, rgba(6, 182, 212, 0) 70%); border: 2px solid rgba(6, 182, 212, 0.8); position: absolute; animation: pulseAura 3s infinite; pointer-events: none; z-index: 5; }
+        @keyframes pulseAura { 0% { transform: scale(0.5); opacity: 0.8; } 50% { transform: scale(1.5); opacity: 0.2; } 100% { transform: scale(0.5); opacity: 0.8; } }
+        
+        .drone-model-container { position: absolute; width: 140px; height: 140px; transform: translate(-50%, -50%); z-index: 20; pointer-events: none; }
+        .drone-floater { width: 100%; height: 100%; animation: floatDrone 4s ease-in-out infinite; }
+        @keyframes floatDrone { 0% { transform: translateY(-70px); } 50% { transform: translateY(-85px); } 100% { transform: translateY(-70px); } }
+
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
+        .rec-dot { width: 6px; height: 6px; background: #fff; border-radius: 50%; animation: blink 1s infinite; display: inline-block; margin-right: 4px; }
+        
+        .btn-perspective { margin-top: 10px; width: 100%; padding: 8px 0; background: #3b82f6; color: #fff; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); }
+        .btn-perspective:hover { background: #2563eb; transform: translateY(-1px); }
+
+        .custom-popup { position: absolute; background: #ffffff; border-radius: 8px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); padding: 12px; width: 280px; z-index: 1000; transform: translate(-50%, calc(-100% - 30px)); }
+        .custom-popup::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); border-width: 8px 8px 0; border-style: solid; border-color: #ffffff transparent transparent transparent; }
+        .popup-close { position: absolute; top: 10px; right: 12px; cursor: pointer; color: #94a3b8; font-size: 20px; line-height: 1; font-weight: bold; transition: color 0.2s; z-index: 10; }
+        .popup-close:hover { color: #ef4444; }
+
+        .alert-marker-container { position: absolute; z-index: 15; width: 24px; height: 24px; transform: translate(-50%, -50%); }
+        .alert-marker-shape { position: absolute; top: 0; left: 0; width: 100%; height: 100%; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); transition: background-color 0.3s, clip-path 0.3s, border-radius 0.3s; }
+        .alert-marker-pulse { position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; transform: translate(-50%, -50%); border-radius: 50%; z-index: -1; animation: markerPulse 2s infinite cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes markerPulse { 0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.8; } 70% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; } 100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; } }
+
+        .alert-marker-container.danger .alert-marker-shape { background-color: #ef4444; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); border-radius: 0; }
+        .alert-marker-container.danger .alert-marker-pulse { background-color: rgba(239, 68, 68, 0.6); }
+        .alert-marker-container.warning .alert-marker-shape { background-color: #f59e0b; clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); border-radius: 4px; }
+        .alert-marker-container.warning .alert-marker-pulse { background-color: rgba(245, 158, 11, 0.6); }
+        .alert-marker-container.info .alert-marker-shape { background-color: #10b981; clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); border-radius: 50%; }
+        .alert-marker-container.info .alert-marker-pulse { background-color: rgba(16, 185, 129, 0.6); }
+        
+        .route-actions { display: flex; gap: 6px; margin-top: 8px; }
+        .edit-route-btn { background: #e0f2fe; color: #0284c7; border: 1px solid #7dd3fc; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; transition: all 0.2s; font-weight: bold; flex: 1; text-align: center; }
+        .edit-route-btn:hover { background: #bae6fd; }
+        .edit-route-btn.editing { background: #fef08a; color: #a16207; border-color: #fde047; }
     </style>
 </head>
 <body>
 
 <header class="dash-header">
   <div style="display:flex; align-items:center; gap: 12px;">
-    <img src="assets/images/logo.png" alt="Logo" style="width: 36px; height: 36px; border-radius: 8px; background: #1e1e20; border: 1px solid var(--br);">
-    <span style="font-size: 20px; font-weight: 800; color: #fff;">OmniAero-OBB <span style="font-size:12px;color:var(--cc);font-weight:600;">GIS 大屏</span></span>
-  </div>
-  
-  <div style="display:flex; align-items:center; background:rgba(255,255,255,0.05); padding:4px; border-radius:12px; border:1px solid rgba(255,255,255,0.08); position: absolute; left: 50%; transform: translateX(-50%);">
-    <a href="dashboard.html" style="padding:6px 20px; border-radius:8px; font-size:13px; font-weight:600; color:var(--cm); text-decoration:none; display:flex; align-items:center; gap:6px;">
-      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg> 控制台
-    </a>
-    <a href="map.html" style="padding:6px 20px; border-radius:8px; font-size:13px; font-weight:700; color:var(--cb); background:rgba(59,130,246,0.15); box-shadow:0 1px 3px rgba(0,0,0,0.1); text-decoration:none; display:flex; align-items:center; gap:6px;">
-      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/></svg> 天眼 GIS
-    </a>
-    <a href="knowledge.html" style="padding:6px 20px; border-radius:8px; font-size:13px; font-weight:600; color:var(--cm); text-decoration:none; display:flex; align-items:center; gap:6px;">
-      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg> 知识库
-    </a>
+    <div style="width: 36px; height: 36px; border-radius: 8px; background: #e0f2fe; border: 1px solid var(--br); display:flex; align-items:center; justify-content:center; font-weight:bold; color:#3b82f6">OA</div>
+    <span style="font-size: 20px; font-weight: 800;">OmniAero-OBB <span style="font-size:12px;color:#06b6d4;">多机协同版</span></span>
   </div>
 </header>
 
 <div id="map"></div>
 
 <div class="float-panel panel-left">
-    <div class="panel-title"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg> 在线无人机编队</div>
-    
-    <div class="drone-card" onclick="focusMap(30.2741, 120.1551)">
-        <div class="drone-header"><span class="drone-name">Drone-Alpha (市区)</span><span class="drone-status">巡航中</span></div>
-        <div class="drone-data"><span>🔋 86%</span><span>📡 强</span><span>ALT: 120m</span></div>
+    <div class="panel-title" onclick="togglePanel('left-content', 'left-icon')">
+        <div style="display: flex; align-items: center; gap: 8px;">🚁 在线无人机编队 (3)</div>
+        <span class="toggle-icon" id="left-icon">▼</span>
     </div>
     
-    <div class="drone-card" onclick="focusMap(30.2100, 120.2000)">
-        <div class="drone-header"><span class="drone-name">Drone-Beta (高速段)</span><span class="drone-status" style="background:rgba(245,158,11,0.2);color:#fbbf24;">分析中</span></div>
-        <div class="drone-data"><span>🔋 42%</span><span>📡 中</span><span>ALT: 85m</span></div>
+    <div class="panel-content" id="left-content">
+        <div class="drone-card" onclick="showDronePanel(0)">
+            <div class="drone-header"><span class="drone-name">Drone-Alpha</span><span class="drone-status">巡航中</span></div>
+            <div class="drone-data"><span>🔋 86%</span><span>ALT: 120m</span></div>
+            <div class="route-actions">
+                <button class="edit-route-btn" onclick="event.stopPropagation(); toggleRouteEdit(0)">✏️ 修改路线</button>
+            </div>
+        </div>
+        <div class="drone-card" onclick="showDronePanel(1)">
+            <div class="drone-header"><span class="drone-name">Drone-Beta</span><span class="drone-status" style="background:rgba(245,158,11,0.1);color:#d97706;border-color:rgba(245,158,11,0.4);">抵近侦察</span></div>
+            <div class="drone-data"><span>🔋 62%</span><span>ALT: 85m</span></div>
+            <div class="route-actions">
+                <button class="edit-route-btn" onclick="event.stopPropagation(); toggleRouteEdit(1)">✏️ 修改路线</button>
+            </div>
+        </div>
+        <div class="drone-card" onclick="showDronePanel(2)">
+            <div class="drone-header"><span class="drone-name">Drone-Gamma</span><span class="drone-status" style="background:rgba(100,116,139,0.1);color:#64748b;border-color:rgba(100,116,139,0.3);">自动返航</span></div>
+            <div class="drone-data"><span>🔋 18%</span><span>ALT: 150m</span></div>
+            <div class="route-actions">
+                <button class="edit-route-btn" onclick="event.stopPropagation(); toggleRouteEdit(2)">修改路线</button>
+            </div>
+        </div>
     </div>
 </div>
 
 <div class="float-panel panel-right">
-    <div class="panel-title" style="color:#ef4444;"><svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg> Vision AI 实时研判告警</div>
+    <div class="panel-title" onclick="togglePanel('right-content', 'right-icon')">
+        <div style="display: flex; align-items: center; gap: 8px;">道路异常情况</div>
+        <span class="toggle-icon" id="right-icon">▼</span>
+    </div>
     
-    <div class="alert-list">
-        <div class="alert-card" onclick="showAlertDetail(30.2811, 120.1481, '路面重度破损', 'Qwen-VL 识别到主干道中央存在深约 8/10 的坑洞，极易引发爆胎事故。')">
-            <div class="alert-title"><span>⚠️ 发现路坑 (重度)</span><span style="font-size:10px; color:#fca5a5;">刚刚</span></div>
-            <div class="alert-desc">坐标: [30.2811, 120.1481]<br>建议: 立即下发公路养护工单。</div>
+    <div class="panel-content" id="right-content">
+        <div class="alert-category">
+            <div class="alert-category-title" style="color: #ef4444;" onclick="togglePanel('sub-danger', 'icon-sub-danger')">
+                <div style="display: flex; align-items: center; gap: 6px;">🔴 紧急危险 <span id="count-danger">2</span></div>
+                <span class="toggle-icon" id="icon-sub-danger">▼</span>
+            </div>
+            <div class="sub-content" id="sub-danger">
+                <div class="alert-drop-zone" id="zone-danger" data-severity="danger">
+                    <div class="alert-card danger" draggable="true" data-alert-id="1">
+                        <div class="alert-title"><span>⚠️ 路面重度塌陷</span></div>
+                        <div class="drone-data" style="margin-top:4px;"><span>Alpha 抓拍</span><span>刚刚</span></div>
+                    </div>
+                    <div class="alert-card danger" draggable="true" data-alert-id="2">
+                        <div class="alert-title"><span>💥 大型车祸</span></div>
+                        <div class="drone-data" style="margin-top:4px;"><span>Alpha 抓拍</span><span>刚刚</span></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="alert-card warn" onclick="showAlertDetail(30.2200, 120.1800, '异常违停拥堵', '匝道口识别到 3 辆货车(Freight)违章停放，后方已有 10+ 辆轿车排队缓行。')">
-            <div class="alert-title"><span>🚧 交通拥堵 (中度)</span><span style="font-size:10px; color:#fcd34d;">3分钟前</span></div>
-            <div class="alert-desc">坐标: [30.2200, 120.1800]<br>建议: 调度交警前往疏导。</div>
+        <div class="alert-category">
+            <div class="alert-category-title" style="color: #f59e0b;" onclick="togglePanel('sub-warning', 'icon-sub-warning')">
+                <div style="display: flex; align-items: center; gap: 6px;">🟡 次紧急状况 <span id="count-warning">2</span></div>
+                <span class="toggle-icon" id="icon-sub-warning">▼</span>
+            </div>
+            <div class="sub-content" id="sub-warning">
+                <div class="alert-drop-zone" id="zone-warning" data-severity="warning">
+                    <div class="alert-card warning" draggable="true" data-alert-id="3">
+                        <div class="alert-title"><span>🚧 渣土车违规倾倒</span></div>
+                        <div class="drone-data" style="margin-top:4px;"><span>Beta 抓拍</span><span>5分钟前</span></div>
+                    </div>
+                    <div class="alert-card warning" draggable="true" data-alert-id="4">
+                        <div class="alert-title"><span>🚗 车辆轻微剐蹭</span></div>
+                        <div class="drone-data" style="margin-top:4px;"><span>Beta 抓拍</span><span>5分钟前</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-category">
+            <div class="alert-category-title" style="color: #10b981;" onclick="togglePanel('sub-info', 'icon-sub-info')">
+                <div style="display: flex; align-items: center; gap: 6px;">🟢 重要注意事件 <span id="count-info">1</span></div>
+                <span class="toggle-icon" id="icon-sub-info">▼</span>
+            </div>
+            <div class="sub-content" id="sub-info">
+                <div class="alert-drop-zone" id="zone-info" data-severity="info">
+                    <div class="alert-card info" draggable="true" data-alert-id="5">
+                        <div class="alert-title"><span>ℹ️ 绿化带护栏轻微受损</span></div>
+                        <div class="drone-data" style="margin-top:4px;"><span>Gamma 抓拍</span><span>已备案</span></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    // 1. 初始化地图 (以杭州市为中心)
-    var map = L.map('map', { zoomControl: false }).setView([30.25, 120.16], 12);
-    L.control.zoom({ position: 'bottomright' }).addTo(map);
-
-    // 2. 挂载极其酷炫的 CartoDB 暗黑极客底图 (免费且无需 API Key)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OmniAero GIS Engine',
-        subdomains: 'abcd',
-        maxZoom: 20
-    }).addTo(map);
-
-    // 3. 自定义发光点标记 (利用 DivIcon 插入 HTML 动画)
-    var alertIcon = L.divIcon({ className: 'custom-div-icon', html: "<div class='pulse-marker'></div>", iconSize: [16, 16], iconAnchor: [8, 8] });
-    var droneIcon = L.divIcon({ className: 'custom-div-icon', html: "<div class='pulse-marker drone'></div>", iconSize: [16, 16], iconAnchor: [8, 8] });
-
-    // 4. 在地图上标出两架正在飞行的无人机
-    L.marker([30.2741, 120.1551], {icon: droneIcon}).addTo(map).bindPopup("<b>🚁 Drone-Alpha</b><br>当前高度: 120m");
-    L.marker([30.2100, 120.2000], {icon: droneIcon}).addTo(map).bindPopup("<b>🚁 Drone-Beta</b><br>当前高度: 85m");
-
-    // 5. 交互逻辑：点击列表，地图平滑移动并弹出 AI 报告
-    function focusMap(lat, lng) {
-        map.flyTo([lat, lng], 15, { animate: true, duration: 1.5 });
+    // 基础 UI 交互逻辑可以立刻执行
+    function togglePanel(contentId, iconId) {
+        var content = document.getElementById(contentId);
+        var icon = document.getElementById(iconId);
+        if (content.classList.contains('collapsed')) {
+            content.classList.remove('collapsed'); icon.classList.remove('collapsed');
+        } else {
+            content.classList.add('collapsed'); icon.classList.add('collapsed');
+        }
     }
 
-    // 保存当前高亮的报警点，避免重复添加
-    var currentAlertMarker = null; 
+    // ==========================================
+    // 🌟 核心修改：将所有的地图逻辑包裹进回调函数中
+    // ==========================================
+    window.initBaiduMap = function() {
+        
+        var map = new BMapGL.Map("map");          
+        map.centerAndZoom(new BMapGL.Point(120.1551, 30.2737), 15.5); 
+        map.setMapStyleV2({ styleId: '9379402b044f16bb1a39b3dff3b5623c' });
+        map.setMaxZoom(20);
+        map.enableScrollWheelZoom(true);     
+        map.setTilt(60);                     
+        map.setHeading(20);                  
 
-    function showAlertDetail(lat, lng, title, aiReport) {
-        focusMap(lat, lng);
+        function EffectOverlay(point, cssClass) { this._point = point; this._cssClass = cssClass; }
+        EffectOverlay.prototype = new BMapGL.Overlay();
+        EffectOverlay.prototype.initialize = function(map) {
+            this._map = map;
+            var div = document.createElement("div"); div.className = this._cssClass;
+            map.getPanes().labelPane.appendChild(div);
+            this._div = div; return div;
+        }
+        EffectOverlay.prototype.draw = function() {
+            var pixel = this._map.pointToOverlayPixel(this._point);
+            var size = this._cssClass === 'aura-ring' ? 40 : 14;
+            this._div.style.left = pixel.x - (size/2) + "px"; this._div.style.top  = pixel.y - (size/2) + "px";
+        }
+        EffectOverlay.prototype.hide = function() { if (this._div) this._div.style.display = "none"; }
+        EffectOverlay.prototype.show = function() { if (this._div) this._div.style.display = "block"; }
+        EffectOverlay.prototype.setPosition = function(point) { this._point = point; this.draw(); }
+
+        function DroneModelOverlay(point, glbUrl) { this._point = point; this._glbUrl = glbUrl; this._heading = 0; }
+        DroneModelOverlay.prototype = new BMapGL.Overlay();
+        DroneModelOverlay.prototype.initialize = function(map) {
+            this._map = map;
+            var div = document.createElement("div"); div.className = "drone-model-container";
+            div.innerHTML = `<div class="drone-floater"><model-viewer src="${this._glbUrl}" orientation="90deg 90deg 0deg" camera-orbit="0deg 75deg 105%" environment-image="neutral" shadow-intensity="1" style="width: 100%; height: 100%; background-color: transparent;"></model-viewer></div>`;
+            map.getPanes().labelPane.appendChild(div);
+            this._div = div; return div;
+        }
+        DroneModelOverlay.prototype.draw = function() {
+            var pixel = this._map.pointToOverlayPixel(this._point);
+            this._div.style.left = pixel.x + "px"; this._div.style.top  = pixel.y + "px";
+            this._div.style.transform = `translate(-50%, -50%) rotate(${this._heading}deg)`;
+        }
+        DroneModelOverlay.prototype.hide = function() { if(this._div) this._div.style.display = "none"; }
+        DroneModelOverlay.prototype.show = function() { if(this._div) this._div.style.display = "block"; }
+        DroneModelOverlay.prototype.setPosition = function(point) { this._point = point; this.draw(); }
+        DroneModelOverlay.prototype.setHeading = function(angle) { this._heading = angle; this.draw(); }
+
+        function DronePopupOverlay(point) { this._point = point; }
+        DronePopupOverlay.prototype = new BMapGL.Overlay();
+        DronePopupOverlay.prototype.initialize = function(map) {
+            this._map = map;
+            var div = document.createElement("div"); div.className = "custom-popup";
+            div.innerHTML = `
+                <div class="popup-close" onclick="closeDronePopup()">×</div>
+                <div style="font-weight:bold; margin-bottom: 8px; color: var(--ct); display:flex; justify-content:space-between; padding-right:16px;">
+                    <span id="popup-drone-name">🛰️ Alpha 实时传回</span><span style="color:#10b981; font-size:12px;">连接正常</span>
+                </div>
+                <div style="width: 100%; height: 140px; background: #1e293b url('https://images.unsplash.com/photo-1473968512647-3e447244af8f?auto=format&fit=crop&w=400&q=80') center/cover; border-radius: 6px; position: relative; overflow: hidden; border: 1px solid #cbd5e1;">
+                    <div style="position: absolute; top:6px; left:6px; background: rgba(239,68,68,0.85); color:#fff; font-size:10px; padding:2px 6px; border-radius:4px;"><span class="rec-dot"></span> REC</div>
+                    <div style="position: absolute; bottom:6px; right:6px; color:#fff; font-size:10px; font-family:monospace; background:rgba(0,0,0,0.5); padding:2px 4px;">1080P 60FPS</div>
+                </div>
+                <button class="btn-perspective" onclick="enterChaseCamera()">🎯 查看无人机视角</button>
+            `;
+            map.getPanes().labelPane.appendChild(div);
+            this._div = div; this.hide(); return div;
+        }
+        DronePopupOverlay.prototype.draw = function() {
+            var pixel = this._map.pointToOverlayPixel(this._point);
+            this._div.style.left = pixel.x + "px"; this._div.style.top  = pixel.y + "px";
+        }
+        DronePopupOverlay.prototype.hide = function() { if(this._div) this._div.style.display = "none"; }
+        DronePopupOverlay.prototype.show = function() { if(this._div) this._div.style.display = "block"; }
+        DronePopupOverlay.prototype.setPosition = function(point) { this._point = point; this.draw(); }
+
+        function AlertMarkerOverlay(point, severity) { this._point = point; this._severity = severity; }
+        AlertMarkerOverlay.prototype = new BMapGL.Overlay();
+        AlertMarkerOverlay.prototype.initialize = function(map) {
+            this._map = map;
+            var container = document.createElement("div"); container.className = "alert-marker-container " + this._severity;
+            var pulse = document.createElement("div"); pulse.className = "alert-marker-pulse";
+            var shape = document.createElement("div"); shape.className = "alert-marker-shape";
+            container.appendChild(pulse); container.appendChild(shape);
+            map.getPanes().labelPane.appendChild(container);
+            this._div = container; return container;
+        }
+        AlertMarkerOverlay.prototype.draw = function() {
+            var pixel = this._map.pointToOverlayPixel(this._point);
+            this._div.style.left = pixel.x + "px"; this._div.style.top  = pixel.y + "px";
+        }
+        AlertMarkerOverlay.prototype.setSeverity = function(severity) {
+            this._severity = severity; this._div.className = "alert-marker-container " + severity;
+        }
+        AlertMarkerOverlay.prototype.hide = function() { if (this._div) this._div.style.display = "none"; }
+        AlertMarkerOverlay.prototype.show = function() { 
+            if (this._div) { this._div.style.display = "block"; this._div.style.animation = "pulseAlert 0.5s ease-out"; } 
+        }
+
+        var trackingPopup = new DronePopupOverlay(new BMapGL.Point(0,0)); 
+        map.addOverlay(trackingPopup);
+
+        var mapAlertsData = [
+            { id: "1", point: new BMapGL.Point(120.1601, 30.2737), severity: "danger", discovered: false }, 
+            { id: "2", point: new BMapGL.Point(120.1651, 30.2697), severity: "danger", discovered: false }, 
+            { id: "3", point: new BMapGL.Point(120.1501, 30.2837), severity: "warning", discovered: false },
+            { id: "4", point: new BMapGL.Point(120.1551, 30.2797), severity: "warning", discovered: false },
+            { id: "5", point: new BMapGL.Point(120.1701, 30.2637), severity: "info", discovered: false }    
+        ];
+        var alertMarkersMap = {};
+        mapAlertsData.forEach(function(item) {
+            var marker = new AlertMarkerOverlay(item.point, item.severity);
+            map.addOverlay(marker);
+            marker.hide(); 
+            alertMarkersMap[item.id] = marker;
+        });
+
+        var fleet = [
+            { name: "Drone-Alpha", speed: 0.001, progress: 0, pathIdx: 0, direction: 1, isEditing: false, path: [new BMapGL.Point(120.1551, 30.2737), new BMapGL.Point(120.1651, 30.2737), new BMapGL.Point(120.1651, 30.2657)] },
+            { name: "Drone-Beta", speed: 0.0015, progress: 0, pathIdx: 0, direction: 1, isEditing: false, path: [new BMapGL.Point(120.1451, 30.2837), new BMapGL.Point(120.1551, 30.2837)] },
+            { name: "Drone-Gamma", speed: 0.0008, progress: 0, pathIdx: 0, direction: 1, isEditing: false, path: [new BMapGL.Point(120.1651, 30.2637), new BMapGL.Point(120.1751, 30.2637), new BMapGL.Point(120.1751, 30.2557)] }
+        ];
+
+        fleet.forEach(function(drone) {
+            drone.currentPoint = drone.path[0];
+            drone.overlays = {
+                radarDot: new EffectOverlay(drone.currentPoint, 'radar-dot'),
+                auraRing: new EffectOverlay(drone.currentPoint, 'aura-ring'),
+                droneModel: new DroneModelOverlay(drone.currentPoint, './assets/models/drone.glb')
+            };
+            map.addOverlay(drone.overlays.radarDot);
+            map.addOverlay(drone.overlays.auraRing);
+            map.addOverlay(drone.overlays.droneModel);
+
+            drone.polyline = new BMapGL.Polyline(drone.path, { strokeColor: "#3b82f6", strokeWeight: 3, strokeOpacity: 0.6, strokeStyle: "dashed" });
+            map.addOverlay(drone.polyline);
+
+            drone.polyline.addEventListener('lineupdate', function(e) {
+                var newPath = e.target.getPath();
+                if (newPath.length < 2) return;
+                drone.path = newPath; 
+                if (drone.pathIdx >= drone.path.length - 1) drone.pathIdx = Math.max(0, drone.path.length - 2);
+            });
+        });
+
+        window.focusedDroneIndex = -1; 
+        window.isChaseMode = false;
+
+        var LOD_THRESHOLD = 18; 
+        function updateLOD() {
+            var currentZoom = map.getZoom(); 
+            if (currentZoom < 19) map.setMaxZoom(20); 
+            fleet.forEach(function(drone) {
+                if (currentZoom >= LOD_THRESHOLD) {
+                    drone.overlays.radarDot.hide();    
+                    drone.overlays.auraRing.show();    
+                    drone.overlays.droneModel.show();  
+                } else {
+                    drone.overlays.droneModel.hide();  
+                    drone.overlays.auraRing.hide();    
+                    drone.overlays.radarDot.show();    
+                }
+            });
+        }
+        map.addEventListener('zoomend', updateLOD);
+        setTimeout(updateLOD, 200); 
+
+        window.showDronePanel = function(index) {
+            focusedDroneIndex = index;
+            var targetDrone = fleet[index];
+            document.getElementById('popup-drone-name').innerText = '🛰️ ' + targetDrone.name + ' 实时传回';
+            window.isChaseMode = false; 
+            map.setViewport([targetDrone.currentPoint], { zoomFactor: 17, delay: 0, enableAnimation: true });
+            setTimeout(() => { map.setTilt(45); }, 500);
+            setTimeout(() => { trackingPopup.show(); }, 800);
+        }
+
+        window.enterChaseCamera = function() {
+            if(focusedDroneIndex === -1) return;
+            var targetDrone = fleet[focusedDroneIndex];
+            trackingPopup.hide(); 
+            map.setMaxZoom(23); 
+            window.isChaseMode = false; 
+            map.setViewport([targetDrone.currentPoint], { zoomFactor: 21, delay: 0, enableAnimation: true });
+            setTimeout(() => { map.setTilt(75); window.isChaseMode = true; }, 800);
+        }
+
+        window.closeDronePopup = function() {
+            trackingPopup.hide();
+            focusedDroneIndex = -1; 
+            window.isChaseMode = false;
+        }
+
+        window.toggleRouteEdit = function(index) {
+            var drone = fleet[index];
+            drone.isEditing = !drone.isEditing;
+            var btn = document.querySelectorAll('.edit-route-btn')[index];
+            if (drone.isEditing) {
+                drone.polyline.enableEditing(); 
+                btn.classList.add('editing'); btn.innerText = '✅ 保存路线';
+            } else {
+                drone.polyline.disableEditing(); 
+                btn.classList.remove('editing'); btn.innerText = '✏️ 修改路线';
+            }
+        }
+
+        function initDragAndDrop() {
+            const cards = document.querySelectorAll('.alert-card');
+            const dropZones = document.querySelectorAll('.alert-drop-zone');
+            cards.forEach(card => {
+                card.addEventListener('dragstart', () => { card.classList.add('dragging'); });
+                card.addEventListener('dragend', () => { card.classList.remove('dragging'); updateAlertCounts(); });
+            });
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+                zone.addEventListener('dragleave', () => { zone.classList.remove('drag-over'); });
+                zone.addEventListener('drop', e => {
+                    e.preventDefault();
+                    zone.classList.remove('drag-over');
+                    const draggingCard = document.querySelector('.dragging');
+                    if (draggingCard) {
+                        zone.appendChild(draggingCard);
+                        const newSeverity = zone.getAttribute('data-severity');
+                        draggingCard.classList.remove('danger', 'warning', 'info');
+                        draggingCard.classList.add(newSeverity);
+                        const alertId = draggingCard.getAttribute('data-alert-id');
+                        if (alertId && alertMarkersMap[alertId]) {
+                            alertMarkersMap[alertId].setSeverity(newSeverity);
+                        }
+                    }
+                });
+            });
+        }
+        function updateAlertCounts() {
+            document.getElementById('count-danger').innerText = document.getElementById('zone-danger').children.length;
+            document.getElementById('count-warning').innerText = document.getElementById('zone-warning').children.length;
+            document.getElementById('count-info').innerText = document.getElementById('zone-info').children.length;
+        }
+
+        function animateFlight() {
+            fleet.forEach(function(drone, index) {
+                if (drone.path.length < 2) return;
+                var p1 = drone.path[drone.pathIdx];
+                var p2 = (drone.direction === 1) ? drone.path[drone.pathIdx + 1] : drone.path[drone.pathIdx - 1];
+                if (!p1 || !p2) { drone.pathIdx = 0; drone.direction = 1; p1 = drone.path[0]; p2 = drone.path[1]; }
+
+                drone.progress += drone.speed;
+                if (drone.progress >= 1) {
+                    drone.progress = 0;
+                    if (drone.direction === 1) {
+                        drone.pathIdx++;
+                        if (drone.pathIdx >= drone.path.length - 1) { drone.direction = -1; drone.pathIdx = drone.path.length - 1; }
+                    } else {
+                        drone.pathIdx--;
+                        if (drone.pathIdx <= 0) { drone.direction = 1; drone.pathIdx = 0; }
+                    }
+                    p1 = drone.path[drone.pathIdx];
+                    p2 = (drone.direction === 1) ? drone.path[drone.pathIdx + 1] : drone.path[drone.pathIdx - 1];
+                }
+                
+                var curLng = p1.lng + (p2.lng - p1.lng) * drone.progress;
+                var curLat = p1.lat + (p2.lat - p1.lat) * drone.progress;
+                drone.currentPoint = new BMapGL.Point(curLng, curLat);
+                
+                var dx = p2.lng - p1.lng;
+                var dy = p2.lat - p1.lat;
+                drone.currentHeading = Math.atan2(dx, dy) * 180 / Math.PI;
+
+                drone.overlays.radarDot.setPosition(drone.currentPoint);
+                drone.overlays.auraRing.setPosition(drone.currentPoint);
+                drone.overlays.droneModel.setPosition(drone.currentPoint);
+                drone.overlays.droneModel.setHeading(drone.currentHeading); 
+                
+                if (focusedDroneIndex === index) {
+                    trackingPopup.setPosition(drone.currentPoint);
+                    if (window.isChaseMode) {
+                        map.setCenter(drone.currentPoint);
+                        map.setHeading(drone.currentHeading);
+                    }
+                }
+
+                mapAlertsData.forEach(function(alert) {
+                    if (!alert.discovered) {
+                        var dxAlert = drone.currentPoint.lng - alert.point.lng;
+                        var dyAlert = drone.currentPoint.lat - alert.point.lat;
+                        var distance = Math.sqrt(dxAlert * dxAlert + dyAlert * dyAlert);
+                        if (distance < 0.0002) { 
+                            alert.discovered = true; 
+                            alertMarkersMap[alert.id].show(); 
+                        }
+                    }
+                });
+            });
+            requestAnimationFrame(animateFlight);
+        }
         
-        if(currentAlertMarker) map.removeLayer(currentAlertMarker);
-        
-        // 在地图上打下红色报警坐标
-        currentAlertMarker = L.marker([lat, lng], {icon: alertIcon}).addTo(map);
-        
-        // 组装酷炫的 Popup 弹窗 (模拟引入了一张 Dashboard 检测出来的图)
-        var popupHTML = `
-            <div style="width:220px;">
-                <div class="popup-tag">🚨 Vision Chat 智能研判</div>
-                <div style="font-size:14px;font-weight:bold;margin-bottom:6px;">${title}</div>
-                <div style="width:100%; height:120px; background:url('https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?auto=format&fit=crop&q=80&w=400') center/cover; border-radius:6px; margin-bottom:8px;"></div>
-                <div style="font-size:12px; color:#94a3b8; line-height:1.5;">${aiReport}</div>
-                <button style="margin-top:10px; width:100%; padding:6px; background:#ef4444; color:#fff; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">生成派工单</button>
-            </div>
-        `;
-        
-        // 延迟一点等地图飞过去再弹窗
-        setTimeout(() => {
-            currentAlertMarker.bindPopup(popupHTML).openPopup();
-        }, 1500);
-    }
+        map.addEventListener('dragstart', function() { window.isChaseMode = false; });
+
+        initDragAndDrop();
+        animateFlight();
+    };
+
+    // ==========================================
+    // 🌟 核心修改：动态创建脚本并调用回调函数，彻底防止浏览器拦截
+    // ==========================================
+    window.onload = function() {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        // 注意看这里最后的 callback=initBaiduMap，它会在地图加载完后自动执行上面所有的代码！
+        script.src = "https://api.map.baidu.com/api?type=webgl&v=1.0&ak=rrFX0pxXdSvW6bSu0xEgM0zqALAxSZ5l&callback=initBaiduMap";
+        document.body.appendChild(script);
+    };
+
 </script>
 
 </body>
