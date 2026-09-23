@@ -1,0 +1,762 @@
+html[data-theme="light"] {
+    --omni-bg: #eef7ff;
+    --omni-bg-soft: #f8fbff;
+    --omni-surface: #ffffff;
+    --omni-surface-alt: #eaf4ff;
+    --omni-surface-strong: #dbeafe;
+    --omni-border: #bfdbfe;
+    --omni-border-strong: #60a5fa;
+    --omni-text: #0f172a;
+    --omni-text-muted: #64748b;
+    --omni-primary: #1d8cf0;
+    --omni-primary-strong: #0f6fd6;
+    --omni-primary-soft: rgba(29, 140, 240, 0.12);
+    --omni-shadow: 0 18px 36px rgba(59, 130, 246, 0.12);
+}
+
+html[data-theme="light"] body {
+    background:
+        radial-gradient(circle at top left, rgba(125, 211, 252, 0.26), transparent 28%),
+        radial-gradient(circle at top right, rgba(59, 130, 246, 0.14), transparent 22%),
+        linear-gradient(180deg, #f8fbff 0%, #eef7ff 54%, #e6f1ff 100%) !important;
+    color: var(--omni-text) !important;
+}
+
+html[data-theme="light"] .navbar,
+html[data-theme="light"] .dash-header {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-bottom: 1px solid var(--omni-border) !important;
+    box-shadow: 0 10px 28px rgba(59, 130, 246, 0.08) !important;
+}
+
+html[data-theme="light"] .nav-left span,
+html[data-theme="light"] .nav-tab.active,
+html[data-theme="light"] .content-header h2,
+html[data-theme="light"] .settings-header h2,
+html[data-theme="light"] .data-header h2 {
+    color: var(--omni-primary) !important;
+}
+
+html[data-theme="light"] .nav-tab,
+html[data-theme="light"] .panel-title,
+html[data-theme="light"] .sidebar-header,
+html[data-theme="light"] .list-header,
+html[data-theme="light"] .drawer-title,
+html[data-theme="light"] .status-indicator,
+html[data-theme="light"] .drone-name,
+html[data-theme="light"] .event-type {
+    color: var(--omni-text) !important;
+}
+
+html[data-theme="light"] .nav-tab:hover,
+html[data-theme="light"] .menu-item:hover,
+html[data-theme="light"] .drawer-close-btn:hover,
+html[data-theme="light"] .settings-btn:hover {
+    color: var(--omni-primary) !important;
+}
+
+html[data-theme="light"] .main-content,
+html[data-theme="light"] .video-section,
+html[data-theme="light"] .settings-content,
+html[data-theme="light"] .data-section {
+    background: transparent !important;
+    color: var(--omni-text) !important;
+}
+
+html[data-theme="light"] .settings-sidebar,
+html[data-theme="light"] .drone-list-section,
+html[data-theme="light"] .gemini-drawer,
+html[data-theme="light"] .gemini-modal,
+html[data-theme="light"] #mm-assistant-panel {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: var(--omni-border) !important;
+    box-shadow: var(--omni-shadow) !important;
+    color: var(--omni-text) !important;
+}
+
+html[data-theme="light"] .sidebar-header,
+html[data-theme="light"] .list-header,
+html[data-theme="light"] .settings-header,
+html[data-theme="light"] .drawer-header,
+html[data-theme="light"] .mm-panel-header {
+    background: linear-gradient(180deg, rgba(248, 251, 255, 0.98), rgba(234, 244, 255, 0.92)) !important;
+    border-bottom-color: var(--omni-border) !important;
+}
+
+html[data-theme="light"] .mm-panel-header span {
+    color: var(--omni-primary) !important;
+}
+
+html[data-theme="light"] .menu-item,
+html[data-theme="light"] .drone-status,
+html[data-theme="light"] .card-desc,
+html[data-theme="light"] .placeholder-text,
+html[data-theme="light"] .event-desc,
+html[data-theme="light"] .event-time,
+html[data-theme="light"] .g-card-sub,
+html[data-theme="light"] #mm-status,
+html[data-theme="light"] .mm-scene-desc,
+html[data-theme="light"] .mm-message-status,
+html[data-theme="light"] .mm-kicker,
+html[data-theme="light"] .mm-section-title,
+html[data-theme="light"] .mm-insight-hint,
+html[data-theme="light"] .mm-scene-type-hint,
+html[data-theme="light"] .mm-bullet-list li,
+html[data-theme="light"] .mm-md-list li,
+html[data-theme="light"] .mm-md-paragraph,
+html[data-theme="light"] .map-audit-watermark {
+    color: var(--omni-text-muted) !important;
+}
+
+html[data-theme="light"] .menu-item.active,
+html[data-theme="light"] .drone-item.active,
+html[data-theme="light"] .g-card.active {
+    background: linear-gradient(90deg, rgba(29, 140, 240, 0.12), rgba(191, 219, 254, 0.3)) !important;
+    border-color: var(--omni-border-strong) !important;
+    color: var(--omni-primary) !important;
+    box-shadow: inset 4px 0 0 var(--omni-primary) !important;
+}
+
+html[data-theme="light"] .drone-item,
+html[data-theme="light"] .model-card,
+html[data-theme="light"] .config-card,
+html[data-theme="light"] .settings-card,
+html[data-theme="light"] .data-panel,
+html[data-theme="light"] .vehicle-card,
+html[data-theme="light"] .video-box,
+html[data-theme="light"] .custom-alert-box,
+html[data-theme="light"] .g-card,
+html[data-theme="light"] .mm-card,
+html[data-theme="light"] .custom-popup,
+html[data-theme="light"] .float-panel {
+    background: rgba(255, 255, 255, 0.88) !important;
+    border-color: var(--omni-border) !important;
+    color: var(--omni-text) !important;
+    box-shadow: var(--omni-shadow) !important;
+}
+
+html[data-theme="light"] .model-card.active-model,
+html[data-theme="light"] .actions-card,
+html[data-theme="light"] .chart-container.flow-chart-ready {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(231, 242, 255, 0.96)) !important;
+    border-color: var(--omni-border-strong) !important;
+    box-shadow: 0 16px 30px rgba(59, 130, 246, 0.12), inset 0 0 0 1px rgba(96, 165, 250, 0.5) !important;
+}
+
+html[data-theme="light"] .card-stats,
+html[data-theme="light"] .search-container input,
+html[data-theme="light"] .text-input,
+html[data-theme="light"] .set-input,
+html[data-theme="light"] .set-select,
+html[data-theme="light"] .set-input-small,
+html[data-theme="light"] select,
+html[data-theme="light"] .dropdown-content,
+html[data-theme="light"] .chart-container,
+html[data-theme="light"] .mm-scene-preview,
+html[data-theme="light"] .mm-vehicle-track,
+html[data-theme="light"] .mm-message.user .mm-message-body,
+html[data-theme="light"] .mm-pending-box,
+html[data-theme="light"] .mm-chat-input,
+html[data-theme="light"] .agent-input-wrapper,
+html[data-theme="light"] #agent-chat-body,
+html[data-theme="light"] .agent-chat-body {
+    background: var(--omni-bg-soft) !important;
+    border-color: var(--omni-border) !important;
+    color: var(--omni-text) !important;
+}
+
+html[data-theme="light"] .search-container input::placeholder,
+html[data-theme="light"] .text-input::placeholder,
+html[data-theme="light"] .set-input::placeholder,
+html[data-theme="light"] .mm-chat-input::placeholder,
+html[data-theme="light"] #agent-input::placeholder {
+    color: #94a3b8 !important;
+}
+
+html[data-theme="light"] .dropdown-content div,
+html[data-theme="light"] #agent-input,
+html[data-theme="light"] .agent-msg.system,
+html[data-theme="light"] .mm-user-text,
+html[data-theme="light"] .mm-assistant-text,
+html[data-theme="light"] .mm-risk-title,
+html[data-theme="light"] .mm-scene-type-label,
+html[data-theme="light"] .mm-insight-label,
+html[data-theme="light"] .mm-vehicle-label,
+html[data-theme="light"] .mm-vehicle-count,
+html[data-theme="light"] .g-card-title,
+html[data-theme="light"] .drawer-title,
+html[data-theme="light"] .event-table,
+html[data-theme="light"] .event-table th,
+html[data-theme="light"] .event-table td {
+    color: var(--omni-text) !important;
+}
+
+html[data-theme="light"] .action-btn,
+html[data-theme="light"] .edit-route-btn,
+html[data-theme="light"] .g-btn,
+html[data-theme="light"] .dropdown-btn,
+html[data-theme="light"] .btn-perspective,
+html[data-theme="light"] .custom-alert-btn,
+html[data-theme="light"] .mm-send-btn,
+html[data-theme="light"] .agent-send-btn,
+html[data-theme="light"] .apply-btn,
+html[data-theme="light"] .dock-item.active {
+    background: linear-gradient(135deg, var(--omni-primary), var(--omni-primary-strong)) !important;
+    border-color: transparent !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="light"] .outline-btn,
+html[data-theme="light"] .g-btn,
+html[data-theme="light"] .dock-item,
+html[data-theme="light"] .mm-detect-btn,
+html[data-theme="light"] .agent-trigger-btn,
+html[data-theme="light"] .agent-history-toggle {
+    background: rgba(255, 255, 255, 0.94) !important;
+    border-color: var(--omni-border) !important;
+    color: var(--omni-text) !important;
+    box-shadow: 0 10px 24px rgba(59, 130, 246, 0.1) !important;
+}
+
+html[data-theme="light"] #mm-assistant-handle {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(234, 244, 255, 0.96)) !important;
+    border-color: var(--omni-border) !important;
+    box-shadow: 0 12px 28px rgba(59, 130, 246, 0.14) !important;
+}
+
+html[data-theme="light"] #mm-assistant-handle:hover {
+    background: linear-gradient(180deg, rgba(248, 251, 255, 1), rgba(219, 234, 254, 0.98)) !important;
+    border-color: var(--omni-border-strong) !important;
+}
+
+html[data-theme="light"] .mm-handle-arrow {
+    color: var(--omni-primary-strong) !important;
+}
+
+html[data-theme="light"] .mm-composer {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(240, 247, 255, 0.96)) !important;
+    border-top: 1px solid var(--omni-border) !important;
+}
+
+html[data-theme="light"] .mm-chat-input {
+    background: rgba(255, 255, 255, 0.96) !important;
+    border-color: var(--omni-border) !important;
+    color: var(--omni-text) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+html[data-theme="light"] .mm-detect-btn {
+    background: rgba(255, 255, 255, 0.96) !important;
+    border: 1px solid var(--omni-border) !important;
+    color: var(--omni-primary-strong) !important;
+}
+
+html[data-theme="light"] .mm-send-btn {
+    background: linear-gradient(135deg, var(--omni-primary), var(--omni-primary-strong)) !important;
+    border: 1px solid transparent !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="light"] .agent-input-wrapper {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(240, 247, 255, 0.96)) !important;
+    border-color: var(--omni-border) !important;
+    box-shadow: 0 14px 32px rgba(59, 130, 246, 0.12) !important;
+}
+
+html[data-theme="light"] .agent-send-btn {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: #111111 !important;
+}
+
+html[data-theme="light"] .agent-send-btn:hover {
+    background: transparent !important;
+    color: #000000 !important;
+}
+
+html[data-theme="light"] .agent-trigger-btn:hover,
+html[data-theme="light"] .agent-history-toggle:hover,
+html[data-theme="light"] .dock-item:hover,
+html[data-theme="light"] .drone-item:hover,
+html[data-theme="light"] .model-card:hover,
+html[data-theme="light"] .vehicle-card:hover,
+html[data-theme="light"] .event-item:hover,
+html[data-theme="light"] .g-card:hover {
+    background: var(--omni-surface-alt) !important;
+    border-color: var(--omni-border-strong) !important;
+}
+
+html[data-theme="light"] .agent-minimize-btn,
+html[data-theme="light"] .drawer-close-btn,
+html[data-theme="light"] .popup-close,
+html[data-theme="light"] .close-alert-btn {
+    color: var(--omni-text-muted) !important;
+}
+
+html[data-theme="light"] .agent-msg.user,
+html[data-theme="light"] .stat .val,
+html[data-theme="light"] .v-count,
+html[data-theme="light"] .panel-title,
+html[data-theme="light"] .config-card h3,
+html[data-theme="light"] .model-title,
+html[data-theme="light"] .mm-scene-icon,
+html[data-theme="light"] .mm-vehicle-fill {
+    color: var(--omni-primary) !important;
+}
+
+html[data-theme="light"] .mm-risk-chip {
+    border-width: 1px !important;
+    border-style: solid !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.02em !important;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08) !important;
+}
+
+html[data-theme="light"] .mm-risk-high {
+    background: #ef4444 !important;
+    border-color: #dc2626 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="light"] .mm-risk-medium {
+    background: #f59e0b !important;
+    border-color: #d97706 !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="light"] .mm-risk-low {
+    background: #16a34a !important;
+    border-color: #15803d !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="light"] .mm-scene-type-icon,
+html[data-theme="light"] .mm-insight-icon,
+html[data-theme="light"] .mm-vehicle-icon,
+html[data-theme="light"] .mm-scene-icon {
+    background: linear-gradient(180deg, #eff6ff, #dbeafe) !important;
+    border: 1px solid #93c5fd !important;
+    color: #1d4ed8 !important;
+    box-shadow: 0 8px 18px rgba(59, 130, 246, 0.12) !important;
+}
+
+html[data-theme="light"] .mm-scene-type-icon svg,
+html[data-theme="light"] .mm-insight-icon svg,
+html[data-theme="light"] .mm-vehicle-icon svg {
+    color: #1d4ed8 !important;
+    fill: currentColor !important;
+    stroke: currentColor !important;
+}
+
+html[data-theme="light"] .mm-scene-type-button:hover,
+html[data-theme="light"] .mm-insight-tile:hover {
+    background: rgba(219, 234, 254, 0.46) !important;
+    border-radius: 14px !important;
+}
+
+html[data-theme="light"] .panel-title,
+html[data-theme="light"] .config-card h3,
+html[data-theme="light"] .settings-card h3 {
+    border-bottom-color: var(--omni-border) !important;
+}
+
+html[data-theme="light"] .settings-card h3,
+html[data-theme="light"] .config-card h3,
+html[data-theme="light"] .setting-item,
+html[data-theme="light"] .setting-item.inline,
+html[data-theme="light"] .setting-item label,
+html[data-theme="light"] .form-row > label:first-child,
+html[data-theme="light"] .toggle-label,
+html[data-theme="light"] #set-align-text,
+html[data-theme="light"] .stat .label,
+html[data-theme="light"] .card-desc strong,
+html[data-theme="light"] .badge,
+html[data-theme="light"] .gear-icon,
+html[data-theme="light"] .menu-icon,
+html[data-theme="light"] .close-alert-btn,
+html[data-theme="light"] .sidebar-menu .menu-item,
+html[data-theme="light"] .status-indicator {
+    color: #1e3a8a !important;
+}
+
+html[data-theme="light"] .card-desc,
+html[data-theme="light"] .form-row .tip,
+html[data-theme="light"] .text-input[readonly] {
+    color: #334155 !important;
+}
+
+html[data-theme="light"] .badge {
+    background: #dbeafe !important;
+    border: 1px solid #93c5fd !important;
+}
+
+html[data-theme="light"] .gear-icon:hover,
+html[data-theme="light"] .close-alert-btn:hover,
+html[data-theme="light"] .menu-item:hover .menu-icon,
+html[data-theme="light"] .menu-item.active .menu-icon {
+    color: #1d4ed8 !important;
+}
+
+html[data-theme="light"] .data-panel::before,
+html[data-theme="light"] .data-panel::after {
+    border-color: var(--omni-primary) !important;
+}
+
+html[data-theme="light"] .event-item,
+html[data-theme="light"] .alert-drop-zone.drag-over,
+html[data-theme="light"] .drone-card,
+html[data-theme="light"] .alert-card {
+    border-color: rgba(96, 165, 250, 0.24) !important;
+}
+
+html[data-theme="light"] .alert-card.danger {
+    background: rgba(239, 68, 68, 0.12) !important;
+    border-left: 3px solid #ef4444 !important;
+    border-color: rgba(239, 68, 68, 0.22) !important;
+}
+
+html[data-theme="light"] .alert-card.danger:hover {
+    background: rgba(239, 68, 68, 0.18) !important;
+    border-color: rgba(239, 68, 68, 0.32) !important;
+}
+
+html[data-theme="light"] .alert-card.danger .alert-title {
+    color: #dc2626 !important;
+}
+
+html[data-theme="light"] .alert-card.warning {
+    background: rgba(245, 158, 11, 0.14) !important;
+    border-left: 3px solid #f59e0b !important;
+    border-color: rgba(245, 158, 11, 0.24) !important;
+}
+
+html[data-theme="light"] .alert-card.warning:hover {
+    background: rgba(245, 158, 11, 0.2) !important;
+    border-color: rgba(245, 158, 11, 0.34) !important;
+}
+
+html[data-theme="light"] .alert-card.warning .alert-title {
+    color: #d97706 !important;
+}
+
+html[data-theme="light"] .alert-card.info {
+    background: rgba(16, 185, 129, 0.12) !important;
+    border-left: 3px solid #10b981 !important;
+    border-color: rgba(16, 185, 129, 0.22) !important;
+}
+
+html[data-theme="light"] .alert-card.info:hover {
+    background: rgba(16, 185, 129, 0.18) !important;
+    border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+html[data-theme="light"] .alert-card.info .alert-title {
+    color: #059669 !important;
+}
+
+html[data-theme="light"] .event-item,
+html[data-theme="light"] .drone-card,
+html[data-theme="light"] .alert-card,
+html[data-theme="light"] .custom-popup,
+html[data-theme="light"] .gemini-dock,
+html[data-theme="light"] .system-toast,
+html[data-theme="light"] .toast {
+    background: rgba(255, 255, 255, 0.92) !important;
+    color: var(--omni-text) !important;
+    border-color: var(--omni-border) !important;
+}
+
+html[data-theme="light"] .custom-alert-box {
+    background: #0f172a !important;
+    border-color: #3b82f6 !important;
+    color: #e2e8f0 !important;
+    box-shadow: 0 18px 36px rgba(15, 23, 42, 0.32), 0 0 10px rgba(59, 130, 246, 0.24) !important;
+}
+
+html[data-theme="light"] .custom-alert-header,
+html[data-theme="light"] .custom-alert-footer {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+}
+
+html[data-theme="light"] .custom-alert-body {
+    background: #1e293b !important;
+}
+
+html[data-theme="light"] .alert-message {
+    color: #e2e8f0 !important;
+}
+
+html[data-theme="light"] .gemini-dock {
+    box-shadow: 0 18px 36px rgba(59, 130, 246, 0.12) !important;
+}
+
+html[data-theme="light"] .toggle-slider,
+html[data-theme="light"] .slider,
+html[data-theme="light"] input[type=range] {
+    background: #bfdbfe !important;
+    border-color: #93c5fd !important;
+}
+
+html[data-theme="light"] input[type=range]::-webkit-slider-thumb,
+html[data-theme="light"] input[type=range]::-moz-range-thumb {
+    background: #ffffff !important;
+    border-color: var(--omni-primary) !important;
+}
+
+html[data-theme="light"] .toggle-slider:before,
+html[data-theme="light"] .slider:before {
+    background: #1e3a8a !important;
+    box-shadow: 0 1px 3px rgba(30, 58, 138, 0.22) !important;
+}
+
+html[data-theme="light"] input:checked + .toggle-slider,
+html[data-theme="light"] .toggle-switch input:checked + .slider {
+    background: #60a5fa !important;
+}
+
+html[data-theme="light"] input:checked + .toggle-slider:before,
+html[data-theme="light"] .toggle-switch input:checked + .slider:before {
+    background: #0f172a !important;
+}
+
+html[data-theme="light"] .color-picker::-webkit-color-swatch,
+html[data-theme="light"] .color-picker::-moz-color-swatch {
+    border-color: #1d4ed8 !important;
+}
+
+html[data-theme="light"] .system-toast,
+html[data-theme="light"] .toast {
+    box-shadow: var(--omni-shadow) !important;
+}
+
+html[data-theme="light"] .video-label {
+    background: rgba(29, 140, 240, 0.14) !important;
+    color: var(--omni-primary-strong) !important;
+}
+
+html[data-theme="light"] .drone-hud {
+    color: #1d8cf0 !important;
+    text-shadow: 0 0 6px rgba(29, 140, 240, 0.3) !important;
+}
+
+html[data-theme="light"] .hud-top-bar,
+html[data-theme="light"] .hud-bottom-bar {
+    background: rgba(255, 255, 255, 0.22) !important;
+    border-color: rgba(29, 140, 240, 0.35) !important;
+}
+
+html[data-theme="light"] .reticle-h,
+html[data-theme="light"] .reticle-v,
+html[data-theme="light"] .reticle-dot,
+html[data-theme="light"] .hud-corners .corner {
+    background: #1d8cf0 !important;
+    border-color: #1d8cf0 !important;
+    box-shadow: 0 0 8px rgba(29, 140, 240, 0.4) !important;
+}
+
+html[data-theme="light"] .BMap_pop img {
+    filter: none !important;
+}
+
+html[data-theme="light"] .custom-popup {
+    background: linear-gradient(180deg, #ffffff, #eef6ff) !important;
+    border: 1px solid #bfdbfe !important;
+    box-shadow: 0 18px 36px rgba(37, 99, 235, 0.16) !important;
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .custom-popup > div:first-child {
+    background: linear-gradient(135deg, #eff6ff, #dbeafe) !important;
+    border-bottom: 1px solid #bfdbfe !important;
+}
+
+html[data-theme="light"] .custom-popup > div:first-child span {
+    color: #1d4ed8 !important;
+}
+
+html[data-theme="light"] .custom-popup > div:last-child {
+    background: linear-gradient(180deg, #ffffff, #f8fbff) !important;
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .custom-popup > div:last-child > div:first-child {
+    color: #0f172a !important;
+}
+
+html[data-theme="light"] .custom-popup > div:last-child > div:nth-child(2) {
+    color: #64748b !important;
+}
+
+html[data-theme="light"] .custom-popup select,
+html[data-theme="light"] .custom-popup textarea {
+    background: #f8fbff !important;
+    color: #0f172a !important;
+    border: 1px solid #bfdbfe !important;
+}
+
+html[data-theme="light"] .custom-popup textarea::placeholder {
+    color: #94a3b8 !important;
+}
+
+html[data-theme="light"] .custom-popup [style*="background: #000 url"],
+html[data-theme="light"] .custom-popup [style*="background:#000 url"] {
+    border: 1px solid #bfdbfe !important;
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.12) !important;
+}
+
+html[data-theme="light"] .custom-popup [style*="background:rgba(0,0,0,0.6)"],
+html[data-theme="light"] .custom-popup [style*="background: rgba(0,0,0,0.6)"] {
+    background: rgba(29, 78, 216, 0.9) !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="light"] #event-modal-content > div:first-child {
+    color: #7c93b5 !important;
+}
+
+html[data-theme="light"] .alert-category-title {
+    padding: 14px 18px !important;
+    border: 1px solid rgba(148, 163, 184, 0.18) !important;
+    border-bottom: none !important;
+    border-radius: 18px 18px 0 0 !important;
+    background: linear-gradient(180deg, rgba(248, 251, 255, 0.98), rgba(232, 241, 255, 0.96)) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+html[data-theme="light"] .alert-category-title span:last-child {
+    color: #8aa4c8 !important;
+}
+
+html[data-theme="light"] .alert-drop-zone {
+    padding: 16px !important;
+    border: 1px solid rgba(191, 219, 254, 0.72) !important;
+    border-top: none !important;
+    border-radius: 0 0 18px 18px !important;
+    background: linear-gradient(180deg, rgba(248, 251, 255, 0.98), rgba(239, 246, 255, 0.94)) !important;
+}
+
+html[data-theme="light"] .alert-drop-zone.drag-over {
+    background: linear-gradient(180deg, rgba(232, 244, 255, 1), rgba(219, 234, 254, 0.98)) !important;
+    border-color: var(--omni-border-strong) !important;
+}
+
+html[data-theme="light"] .alert-card {
+    border-radius: 16px !important;
+    border-width: 1px !important;
+    border-style: solid !important;
+    border-left-width: 6px !important;
+    box-shadow: 0 14px 26px rgba(15, 23, 42, 0.18) !important;
+}
+
+html[data-theme="light"] .alert-card .alert-title {
+    font-weight: 800 !important;
+    color: #f8fafc !important;
+}
+
+html[data-theme="light"] .alert-card .drone-data,
+html[data-theme="light"] .alert-card .drone-data span {
+    color: #cbd5e1 !important;
+}
+
+html[data-theme="light"] .alert-card .g-btn {
+    background: #ffffff !important;
+    border: 1px solid rgba(147, 197, 253, 0.9) !important;
+    color: #16335f !important;
+    box-shadow: 0 8px 18px rgba(59, 130, 246, 0.1) !important;
+}
+
+html[data-theme="light"] .alert-card .g-btn.primary {
+    background: linear-gradient(135deg, #1d8cf0, #0f6fd6) !important;
+    border-color: transparent !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="light"] .alert-card.danger {
+    background: linear-gradient(180deg, #dc2626, #b91c1c) !important;
+    border-color: #991b1b !important;
+    border-left-color: #fecaca !important;
+}
+
+html[data-theme="light"] .alert-card.danger:hover {
+    background: linear-gradient(180deg, #ef4444, #c81e1e) !important;
+    box-shadow: 0 16px 28px rgba(220, 38, 38, 0.26) !important;
+}
+
+html[data-theme="light"] .alert-card.danger .alert-title {
+    color: #ffffff !important;
+}
+
+html[data-theme="light"] .alert-card.warning {
+    background: linear-gradient(180deg, #f59e0b, #d97706) !important;
+    border-color: #b45309 !important;
+    border-left-color: #fde68a !important;
+}
+
+html[data-theme="light"] .alert-card.warning:hover {
+    background: linear-gradient(180deg, #fbbf24, #ea8a06) !important;
+    box-shadow: 0 16px 28px rgba(217, 119, 6, 0.24) !important;
+}
+
+html[data-theme="light"] .alert-card.warning .alert-title {
+    color: #fff7ed !important;
+}
+
+html[data-theme="light"] .alert-card.info {
+    background: linear-gradient(180deg, #16a34a, #15803d) !important;
+    border-color: #166534 !important;
+    border-left-color: #bbf7d0 !important;
+}
+
+html[data-theme="light"] .alert-card.info:hover {
+    background: linear-gradient(180deg, #22c55e, #169447) !important;
+    box-shadow: 0 16px 28px rgba(22, 163, 74, 0.24) !important;
+}
+
+html[data-theme="light"] .alert-card.info .alert-title {
+    color: #f0fdf4 !important;
+}
+
+html[data-theme="light"] .alert-card.danger .drone-data,
+html[data-theme="light"] .alert-card.danger .drone-data span,
+html[data-theme="light"] .alert-card.warning .drone-data,
+html[data-theme="light"] .alert-card.warning .drone-data span,
+html[data-theme="light"] .alert-card.info .drone-data,
+html[data-theme="light"] .alert-card.info .drone-data span {
+    color: rgba(255, 255, 255, 0.88) !important;
+}
+
+html[data-theme="light"] .alert-card.danger .g-btn,
+html[data-theme="light"] .alert-card.warning .g-btn,
+html[data-theme="light"] .alert-card.info .g-btn {
+    background: #ffffff !important;
+    border: 1px solid #93c5fd !important;
+    color: #1e3a8a !important;
+    box-shadow: 0 10px 20px rgba(30, 64, 175, 0.16) !important;
+}
+
+html[data-theme="light"] .alert-card.danger .g-btn:hover,
+html[data-theme="light"] .alert-card.warning .g-btn:hover,
+html[data-theme="light"] .alert-card.info .g-btn:hover {
+    background: #eff6ff !important;
+    border-color: #60a5fa !important;
+    color: #1d4ed8 !important;
+}
+
+html[data-theme="light"] .alert-card.danger .g-btn.primary,
+html[data-theme="light"] .alert-card.warning .g-btn.primary,
+html[data-theme="light"] .alert-card.info .g-btn.primary {
+    background: linear-gradient(135deg, #2795f3, #1669d8) !important;
+    border: 1px solid transparent !important;
+    color: #ffffff !important;
+    box-shadow: 0 12px 22px rgba(37, 99, 235, 0.28) !important;
+}
+
+html[data-theme="light"] .alert-card.danger .g-btn.primary:hover,
+html[data-theme="light"] .alert-card.warning .g-btn.primary:hover,
+html[data-theme="light"] .alert-card.info .g-btn.primary:hover {
+    background: linear-gradient(135deg, #3aa5ff, #1d74e8) !important;
+    color: #ffffff !important;
+}

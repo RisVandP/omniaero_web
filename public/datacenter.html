@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniAero-OBB 奥米天鉴</title>
+    <script src="js/theme-init.js"></script>
+    <link rel="stylesheet" href="css/datacenter.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/vehicle-theme.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <script src="js/vehicle-nav.js" defer></script>
+</head>
+<body data-page="jobs">
+
+    <!-- 顶部导航栏 -->
+    <header class="navbar">
+        <div class="nav-left">
+            <img src="image/logo.jpg" alt="Logo" onerror="this.src=''">
+            <span>OmniAero-OBB</span>
+        </div>
+        <div class="nav-center">
+            <div class="nav-tab" onclick="window.location.href='user.html'">无人机</div>
+            <div class="nav-tab" onclick="window.location.href='map.html'">天眼GIS</div>
+            <div class="nav-tab active" onclick="window.location.href='datacenter.html'">数据中心</div>
+            <div class="nav-tab" onclick="window.location.href='model.html'">模型设置</div>
+        </div>
+        <div class="nav-right">
+            <img src="image/avatar.png" alt="User Avatar" onerror="this.src=''">
+        </div>
+    </header>
+
+    <!-- 主体内容 -->
+    <main class="main-content">
+        
+        <!-- 左侧 无人机列表区域 -->
+        <section class="drone-list-section">
+            <div class="list-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <span>无人机设备列表</span>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" id="droneSearch" placeholder="输入名称或型号搜索...">
+            </div>
+
+            <div class="drone-list" id="drone-list">
+                <div class="drone-item job-overview-entry" data-id="job_overview" data-name="作业总览">
+                    <div class="job-overview-mini-radar"><span></span></div>
+                    <div class="drone-info">
+                        <span class="drone-name">作业总览</span>
+                        <span class="drone-status">全域任务 / 预测 / 事件闭环</span>
+                        <div class="job-overview-mini-stats">
+                            <b>17 作业</b><b>86% 覆盖</b><b>9/11 闭环</b>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="drone-item active" data-id="drone_01" data-name="无人机 01 号">
+                    <div class="status-dot"></div>
+                    <div class="drone-info">
+                        <span class="drone-name">无人机 01 号</span>
+                        <span class="drone-status">高度: 120m | 电量: 85%</span>
+                    </div>
+                </div>
+
+                <div class="drone-item" data-id="drone_02" data-name="无人机 02 号">
+                    <div class="status-dot"></div>
+                    <div class="drone-info">
+                        <span class="drone-name">无人机 02 号</span>
+                        <span class="drone-status">高度: 80m | 电量: 62%</span>
+                    </div>
+                </div>
+
+                <div class="drone-item" data-id="drone_03" data-name="无人机 03 号 - 巡检中">
+                    <input type="checkbox" class="drone-checkbox" value="drone_03" style="display: none;">
+                    <div class="status-dot"></div>
+                    <div class="drone-info">
+                        <span class="drone-name">无人机 03 号</span>
+                        <span class="drone-status">高度: 120m | 电量: 73%</span>
+                    </div>
+                </div>
+
+                <div class="drone-item" data-id="drone_04" data-name="无人机 04 号 - 侦察中">
+                    <input type="checkbox" class="drone-checkbox" value="drone_04" style="display: none;">
+                    <div class="status-dot"></div>
+                    <div class="drone-info">
+                        <span class="drone-name">无人机 04 号</span>
+                        <span class="drone-status">高度: 80m | 电量: 70%</span>
+                    </div>
+                </div>
+
+                <div class="drone-item" data-id="drone_05" data-name="无人机 05 号 - 离线">
+                    <input type="checkbox" class="drone-checkbox" value="drone_03" style="display: none;">
+                    <div class="status-dot offline"></div>
+                    <div class="drone-info">
+                        <span class="drone-name" style="color:#94a3b8;">无人机 05 号</span>
+                        <span class="drone-status">状态: 离线未连接</span>
+                    </div>
+                </div>
+                
+                <div id="no-results" class="no-results" style="display: none;">未找到匹配的设备</div>
+            </div>
+        </section>
+
+        <!-- 右侧 道路信息数据区域 -->
+        <section class="data-section">
+            <div class="data-header">
+                <h2 id="current-drone-title">无人机 01 号 - 道路信息分析</h2>
+            </div>
+
+            <section class="job-overview-panel" aria-label="作业管理总览">
+                <div class="job-overview-head">
+                    <div>
+                        <span>OPERATION OVERVIEW</span>
+                        <strong>作业态势总览</strong>
+                    </div>
+                    <em>实时任务链路 / 预测归档 / 事件闭环</em>
+                </div>
+
+                <div class="job-overview-grid">
+                    <article class="job-metric-card primary">
+                        <span>今日作业</span>
+                        <strong>17</strong>
+                        <small>已完成 12 / 执行中 3 / 待复核 2</small>
+                    </article>
+                    <article class="job-metric-card">
+                        <span>巡检覆盖率</span>
+                        <strong>86%</strong>
+                        <small>成都近郊实验巡检线</small>
+                    </article>
+                    <article class="job-metric-card">
+                        <span>预测任务</span>
+                        <strong>42</strong>
+                        <small>时序窗口 15 min</small>
+                    </article>
+                    <article class="job-metric-card warning">
+                        <span>事件闭环</span>
+                        <strong>9/11</strong>
+                        <small>2 项等待人工复核</small>
+                    </article>
+
+                    <div class="job-radar-core">
+                        <div class="radar-ring r1"></div>
+                        <div class="radar-ring r2"></div>
+                        <div class="radar-sweep"></div>
+                        <i class="node n1"></i><i class="node n2"></i><i class="node n3"></i><i class="node n4"></i>
+                        <span>JOB FLOW</span>
+                    </div>
+
+                    <div class="job-flow-lane">
+                        <div class="flow-step active"><b>采集</b><span>UAV 低空视角</span></div>
+                        <div class="flow-step active"><b>检测</b><span>车辆 / 异常事件</span></div>
+                        <div class="flow-step active"><b>预测</b><span>车流趋势</span></div>
+                        <div class="flow-step"><b>归档</b><span>事件存证</span></div>
+                    </div>
+
+                    <div class="job-health-board">
+                        <div><span>链路延迟</span><strong>24ms</strong></div>
+                        <div><span>数据吞吐</span><strong>1.8GB/h</strong></div>
+                        <div><span>模型置信</span><strong>94.2%</strong></div>
+                        <div><span>存储水位</span><strong>68%</strong></div>
+                    </div>
+
+                    <div class="job-prediction-wall">
+                        <div class="overview-subtitle">多机时序预测分屏</div>
+                        <div class="prediction-screens">
+                            <div><span>UAV-01</span><b></b><em>主干道流量 +18%</em></div>
+                            <div><span>UAV-02</span><b></b><em>物流车密度 +11%</em></div>
+                            <div><span>UAV-03</span><b></b><em>郊区流量稳定</em></div>
+                            <div><span>UAV-04</span><b></b><em>快速路拥堵风险 P2</em></div>
+                        </div>
+                    </div>
+
+                    <div class="job-stitch-board">
+                        <div class="overview-subtitle">作业数据拼接链路</div>
+                        <div class="stitch-track">
+                            <span>视频帧</span><i></i><span>检测框</span><i></i><span>事件</span><i></i><span>预测</span><i></i><span>归档</span>
+                        </div>
+                        <div class="stitch-bars">
+                            <b style="width: 78%"></b>
+                            <b style="width: 64%"></b>
+                            <b style="width: 91%"></b>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 板块1：车流量预测图 -->
+            <div class="data-panel panel-flow">
+                <div class="panel-title">实时车流监控与趋势预测</div>
+                <div class="chart-container" id="flow-chart">
+                    <div class="placeholder-text">车流量图表初始化中...</div>
+                </div>
+            </div>
+
+            <!-- 板块2：目标车辆检测数目 -->
+            <div class="data-panel panel-vehicles">
+                <div class="panel-title">目标车辆实时检测计数</div>
+                <div class="vehicle-grid">
+                    <div class="vehicle-card">
+                        <span class="v-type">BUS</span>
+                        <span class="v-name">公交车</span>
+                        <span class="v-count" id="count-bus">0</span>
+                    </div>
+                    <div class="vehicle-card">
+                        <span class="v-type">CAR</span>
+                        <span class="v-name">小轿车</span>
+                        <span class="v-count" id="count-car">0</span>
+                    </div>
+                    <div class="vehicle-card">
+                        <span class="v-type">FREIGHT</span>
+                        <span class="v-name">货车</span>
+                        <span class="v-count" id="count-freight">0</span>
+                    </div>
+                    <div class="vehicle-card">
+                        <span class="v-type">TRUCK</span>
+                        <span class="v-name">卡车</span>
+                        <span class="v-count" id="count-truck">0</span>
+                    </div>
+                    <div class="vehicle-card">
+                        <span class="v-type">VAN</span>
+                        <span class="v-name">面包车</span>
+                        <span class="v-count" id="count-van">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 板块3：事件列表 -->
+            <div class="data-panel panel-events">
+                <div class="panel-title">实时交通事件侦察列表</div>
+                <div class="event-list-wrapper" id="event-wrapper">
+                    <div class="event-scroll-track" id="event-track">
+                        <!-- 数据将通过 JS 动态注入并无缝滚动 -->
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="js/datacenter.js"></script>
+    <link rel="stylesheet" href="css/agent.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/vehicle-theme.css">
+    <link rel="stylesheet" href="css/mobile.css">
+<div id="ai-agent-container" class="agent-container">
+    <button id="agent-trigger-btn" class="agent-trigger-btn" onclick="toggleAgent()">
+        <span class="arrow-icon">↑</span>
+    </button>
+
+    <div id="agent-chat-panel" class="agent-chat-panel collapsed">
+        <div class="agent-input-wrapper">
+            <input type="text" id="agent-input" placeholder="问问 Omni-Agent..." onkeypress="handleAgentInput(event)">
+            <button class="agent-send-btn" onclick="sendAgentMsg()">↑</button>
+            <button class="agent-minimize-btn" onclick="toggleAgent()">×</button>
+        </div>
+        <div class="agent-body" id="agent-chat-body"></div>
+    </div>
+</div>
+<script src="js/agent-runtime.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/omni-spa.js"></script>
+</body>
+</html>

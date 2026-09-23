@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设置 - OmniAero-OBB</title>
+    <script src="js/theme-init.js"></script>
+    <link rel="stylesheet" href="css/model.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/vehicle-theme.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <script src="js/vehicle-nav.js" defer></script>
+</head>
+<body data-page="settings">
+
+    <!-- 1. 顶部导航栏 -->
+    <header class=navbar></header>
+
+    <!-- 主体内容 -->
+    <main class="main-content">
+        
+        <!-- 2. 左侧侧边栏：设置选项 -->
+        <aside class="settings-sidebar">
+            <div class="sidebar-header">
+                <span>系统设置中心</span>
+            </div>
+            <ul class="sidebar-menu" id="sidebarMenu">
+                <li class="menu-item active" data-target="model-repo">
+                    <span class="menu-icon">⊞</span> 模型仓库
+                </li>
+                <li class="menu-item" data-target="platform-settings">
+                    <span class="menu-icon">🖥</span> 平台设置
+                </li>
+                <li class="menu-divider"></li>
+                <li class="menu-item" data-target="help-feedback">
+                    <span class="menu-icon">?</span> 帮助与反馈
+                </li>
+                <li class="menu-item" data-target="about-sys">
+                    <span class="menu-icon">ⓘ</span> 关于 OmniAero
+                </li>
+            </ul>
+        </aside>
+
+        <!-- 3. 右侧内容区：模型仓库九宫格 -->
+        <section class="settings-content" id="model-repo">
+            <div class="content-header">
+                <h2>模型仓库 (Model Zoo)</h2>
+                <div class="header-actions">
+                    <span class="status-indicator">当前状态：就绪 (支持多选启用)</span>
+                    <div class="toggle-container">
+                        <span class="toggle-label">OmniAero-Semi</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="omniAeroSemiToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <button class="action-btn">导入外部模型</button>
+                </div>
+            </div>
+
+            <!-- 九宫格容器 -->
+            <div class="model-grid" id="modelGrid">
+                
+                <!-- Model 1 -->
+                <div class="model-card active-model">
+                    <div class="card-header">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <h3 class="model-title">OmniAero-Edge-o1</h3>
+                            <span class="gear-icon" title="模型详细设置">⚙</span>
+                        </div>
+                        <span class="badge in-use">当前启用</span>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat"><span class="label">参数量</span><span class="val">2.5 M</span></div>
+                        <div class="stat"><span class="label">计算量</span><span class="val">6.2 G</span></div>
+                        <div class="stat"><span class="label">输入尺寸</span><span class="val">640×640</span></div>
+                    </div>
+                    <div class="card-desc">
+                        <p><strong>定位：</strong>高帧率初筛</p>
+                        <p><strong>部署：</strong>轻量化无人机 / 手持终端</p>
+                    </div>
+                    <button class="apply-btn">已应用</button>
+                </div>
+
+                <!-- Model 2 -->
+                <div class="model-card">
+                    <div class="card-header">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <h3 class="model-title">OmniAero-Edge-o2</h3>
+                            <span class="gear-icon" title="模型详细设置">⚙</span>
+                        </div>
+                        <span class="badge">可用</span>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat"><span class="label">参数量</span><span class="val">4.8 M</span></div>
+                        <div class="stat"><span class="label">计算量</span><span class="val">10.0 G</span></div>
+                        <div class="stat"><span class="label">输入尺寸</span><span class="val">640×640</span></div>
+                    </div>
+                    <div class="card-desc">
+                        <p><strong>定位：</strong>边缘端主力感知</p>
+                        <p><strong>部署：</strong>Jetson Orin Nano</p>
+                    </div>
+                    <button class="apply-btn">加载此模型</button>
+                </div>
+
+                <!-- Model 3 -->
+                <div class="model-card">
+                    <div class="card-header">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <h3 class="model-title">OmniAero-Standard</h3>
+                            <span class="gear-icon" title="模型详细设置">⚙</span>
+                        </div>
+                        <span class="badge">可用</span>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat"><span class="label">参数量</span><span class="val">11.2 M</span></div>
+                        <div class="stat"><span class="label">计算量</span><span class="val">20.0 G</span></div>
+                        <div class="stat"><span class="label">输入尺寸</span><span class="val">640×640</span></div>
+                    </div>
+                    <div class="card-desc">
+                        <p><strong>定位：</strong>性能与精度平衡点</p>
+                        <p><strong>部署：</strong>工业 PC / 车载计算</p>
+                    </div>
+                    <button class="apply-btn">加载此模型</button>
+                </div>
+
+                <!-- Model 4 -->
+                <div class="model-card">
+                    <div class="card-header">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <h3 class="model-title">OmniAero-x1</h3>
+                            <span class="gear-icon" title="模型详细设置">⚙</span>
+                        </div>
+                        <span class="badge">可用</span>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat"><span class="label">参数量</span><span class="val">24.5 M</span></div>
+                        <div class="stat"><span class="label">计算量</span><span class="val">55.0 G</span></div>
+                        <div class="stat"><span class="label">输入尺寸</span><span class="val">640×640</span></div>
+                    </div>
+                    <div class="card-desc">
+                        <p><strong>定位：</strong>复杂环境增强方案</p>
+                        <p><strong>部署：</strong>RTX 3060 / 4060 等级</p>
+                    </div>
+                    <button class="apply-btn">加载此模型</button>
+                </div>
+
+                <!-- Model 5 -->
+                <div class="model-card">
+                    <div class="card-header">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <h3 class="model-title">OmniAero-x2</h3>
+                            <span class="gear-icon" title="模型详细设置">⚙</span>
+                        </div>
+                        <span class="badge">可用</span>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat"><span class="label">参数量</span><span class="val">45.0 M</span></div>
+                        <div class="stat"><span class="label">计算量</span><span class="val">120.0 G</span></div>
+                        <div class="stat"><span class="label">输入尺寸</span><span class="val">960×960</span></div>
+                    </div>
+                    <div class="card-desc">
+                        <p><strong>定位：</strong>高清多尺度特征提取</p>
+                        <p><strong>部署：</strong>RTX 4070 / A4000</p>
+                    </div>
+                    <button class="apply-btn">加载此模型</button>
+                </div>
+
+                <!-- Model 6 -->
+                <div class="model-card">
+                    <div class="card-header">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <h3 class="model-title">OmniAero-x3</h3>
+                            <span class="gear-icon" title="模型详细设置">⚙</span>
+                        </div>
+                        <span class="badge">可用</span>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat"><span class="label">参数量</span><span class="val">70.0 M</span></div>
+                        <div class="stat"><span class="label">计算量</span><span class="val">210.0 G</span></div>
+                        <div class="stat"><span class="label">输入尺寸</span><span class="val">1280×1280</span></div>
+                    </div>
+                    <div class="card-desc">
+                        <p><strong>定位：</strong>极限超远距离巡检</p>
+                        <p><strong>部署：</strong>RTX 4080 / A5000</p>
+                    </div>
+                    <button class="apply-btn">加载此模型</button>
+                </div>
+
+                <!-- Model 7 -->
+                <div class="model-card">
+                    <div class="card-header">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <h3 class="model-title">OmniAero-Pro</h3>
+                            <span class="gear-icon" title="模型详细设置">⚙</span>
+                        </div>
+                        <span class="badge">可用</span>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat"><span class="label">参数量</span><span class="val">98.0 M</span></div>
+                        <div class="stat"><span class="label">计算量</span><span class="val">300.0 G</span></div>
+                        <div class="stat"><span class="label">输入尺寸</span><span class="val">动态自适应</span></div>
+                    </div>
+                    <div class="card-desc">
+                        <p><strong>定位：</strong>全能旗舰，多模态融合</p>
+                        <p><strong>部署：</strong>高性能 AI 服务器</p>
+                    </div>
+                    <button class="apply-btn">加载此模型</button>
+                </div>
+
+                <!-- Model 8 & 9: 自定义模型接入 -->
+                <div class="model-card custom-card">
+                    <div class="card-header" style="justify-content: center;">
+                        <h3 style="color:#94a3b8;">+ 自定义模型接入</h3>
+                    </div>
+                    <div class="card-stats" style="justify-content: center; align-items: center; flex: 1;">
+                        <span style="color:#475569; font-size: 13px;">支持 ONNX / TensorRT / NCNN</span>
+                    </div>
+                    <div class="card-desc" style="text-align: center;">
+                        <p>导入自行微调的专有环境模型</p>
+                    </div>
+                    <button class="apply-btn outline-btn">上传 / 挂载配置</button>
+                </div>
+
+                <div class="model-card custom-card">
+                    <div class="card-header" style="justify-content: center;">
+                        <h3 style="color:#94a3b8;">+ 自定义模型接入</h3>
+                    </div>
+                    <div class="card-stats" style="justify-content: center; align-items: center; flex: 1;">
+                        <span style="color:#475569; font-size: 13px;">支持 ONNX / TensorRT / NCNN</span>
+                    </div>
+                    <div class="card-desc" style="text-align: center;">
+                        <p>导入自行微调的专有环境模型</p>
+                    </div>
+                    <button class="apply-btn outline-btn">上传 / 挂载配置</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. 单一模型详细设置页 (默认隐藏，覆盖模型仓库) -->
+        <section class="settings-content" id="model-config-panel" style="display: none;">
+            <div class="content-header">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <button class="action-btn" id="btnBackToRepo">← 返回</button>
+                    <h2 id="configPanelTitle">模型设置 - </h2>
+                </div>
+                <button class="action-btn" style="background-color: #2563eb; color:#fff; border:none;" onclick="showToast('模型设置已保存', 'success'); document.getElementById('btnBackToRepo').click();">保存并应用</button>
+            </div>
+
+            <!-- 这里是默认的两列布局 (.config-form-container) -->
+            <div class="config-form-container">
+                <!-- 基础检测参数 -->
+                <div class="config-card">
+                    <h3>基础检测参数</h3>
+                    <div class="form-row">
+                        <label>置信度阈值 (Confidence)</label>
+                        <div class="slider-group">
+                            <input type="range" id="confThresh" min="0" max="1" step="0.01" value="0.4">
+                            <span id="confThresh-val" class="val-display">0.40</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label>非极大值抑制 (NMS)</label>
+                        <div class="slider-group">
+                            <input type="range" id="nmsThresh" min="0" max="1" step="0.01" value="0.6">
+                            <span id="nmsThresh-val" class="val-display">0.60</span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label>Soft-NMS <span class="tip">(更适合密集目标场景)</span></label>
+                        <label class="toggle-switch"><input type="checkbox" id="softNmsToggle"><span class="toggle-slider"></span></label>
+                    </div>
+                </div>
+
+                <!-- 运行推理配置 -->
+                <div class="config-card">
+                    <h3>推理与运行配置</h3>
+                    <div class="form-row">
+                        <label>输入分辨率</label>
+                        <select id="inputResolution">
+                            <option value="320">320 × 320</option>
+                            <option value="512">512 × 512</option>
+                            <option value="640" selected>640 × 640</option>
+                            <option value="800">800 × 800</option>
+                            <option value="960">960 × 960</option>
+                            <option value="1024">1024 × 1024</option>
+                            <option value="1280">1280 × 1280</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>精度模式</label>
+                        <select id="precisionMode">
+                            <option value="fp64">FP64</option>
+                            <option value="fp32">FP32</option>
+                            <option value="fp16" selected>FP16</option>
+                            <option value="int8">INT8</option>
+                            <option value="mixed">混合精度</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>推理设备</label>
+                        <select id="inferenceDevice">
+                            <option value="gpu" selected>GPU</option>
+                            <option value="cpu">CPU</option>
+                            <option value="edge">边缘设备</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>批处理大小 (Batch Size)</label>
+                        <div class="slider-group">
+                            <input type="range" id="batchSize" min="1" max="8" step="1" value="1">
+                            <span id="batchSize-val" class="val-display">1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 多模态融合设置 -->
+                <div class="config-card">
+                    <h3>多模态融合设置</h3>
+                    <div class="form-row">
+                        <label>融合模式选择</label>
+                        <select id="fusionMode">
+                            <option value="auto" selected>Auto (神经网络决定)</option>
+                            <option value="rgb">RGB only</option>
+                            <option value="ir">IR only</option>
+                        </select>
+                    </div>
+                    <div class="form-row" id="modalPrefRow">
+                        <label>模态偏好</label>
+                        <select id="modalPref">
+                            <option value="auto" selected>Auto 自动</option>
+                            <option value="prefer_rgb">Prefer RGB</option>
+                            <option value="prefer_ir">Prefer IR</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>模态缺失处理</label>
+                        <select id="missingModalHandling">
+                            <option value="downgrade" selected>自动降级为单模态</option>
+                            <option value="save_prev">保存上一帧结果</option>
+                            <option value="use_default">使用默认融合权重</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-top: 15px;">
+                        <h4 style="color:#94a3b8; font-size:13px; margin-bottom:10px; border-bottom:1px solid #334155; padding-bottom:5px;">多模态加速</h4>
+                        <div class="form-row"><label>TensorRT 优化</label><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+                        <div class="form-row"><label>ONNX Dynamic Shape</label><label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+                        <div class="form-row"><label>IR 分支量化缓存</label><label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+                        <div class="form-row"><label>融合层剪枝</label><label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+                    </div>
+                </div>
+
+                <!-- 注意力机制 -->
+                <div class="config-card">
+                    <h3>跨模态注意力</h3>
+                    <div class="form-row">
+                        <label>启用跨模态注意力</label>
+                        <label class="toggle-switch"><input type="checkbox" id="attentionToggle"><span class="toggle-slider"></span></label>
+                    </div>
+                    <div id="attentionOptions" style="display: none; margin-top:10px; padding-top:10px; border-top:1px dashed #334155;">
+                        <div class="form-row">
+                            <label>注意力头数</label>
+                            <div class="slider-group">
+                                <input type="range" id="attnHeads" min="4" max="12" step="2" value="8">
+                                <span id="attnHeads-val" class="val-display">8</span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label>注意力温度</label>
+                            <div class="slider-group">
+                                <input type="range" id="attnTemp" min="0.1" max="2.0" step="0.1" value="0.5">
+                                <span id="attnTemp-val" class="val-display">0.5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 5. 平台设置页 -->
+        <section class="settings-content" id="platform-settings" style="display: none;">
+            <div class="content-header">
+                <h2>平台设置</h2>
+            </div>
+            
+            <!-- 这里通过 CSS 改为了横向占满、纵向排布的单列布局 -->
+            <div class="config-form-container">
+                
+                <!-- 界面与偏好 -->
+                <div class="config-card">
+                    <h3>界面与偏好</h3>
+                    <div class="form-row">
+                        <label>主题设置</label>
+                        <select id="themeSelect">
+                            <option value="system">跟随系统</option>
+                            <option value="light">浅色 (Light)</option>
+                            <option value="dark" selected>深色 (Dark)</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>语言设置</label>
+                        <select id="langSelect">
+                            <option value="en">English</option>
+                            <option value="zh" selected>简体中文</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label>时区设置</label>
+                        <select id="timezoneSelect">
+                            <option value="UTC+8" selected>Asia/Shanghai (UTC+08:00)</option>
+                            <option value="UTC+0">London (UTC+00:00)</option>
+                            <option value="UTC-5">New York (UTC-05:00)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 存储设置 -->
+                <div class="config-card">
+                    <h3>存储与资源管理</h3>
+                    <div class="form-row">
+                        <label>暂停天眼GIS异常识别</label>
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; width:60%;">
+                            <span style="font-size: 12px; color: #94a3b8;">开启后，地图页面不再产生新的道路异常事件，关闭后恢复正常识别。</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="pauseMapEventDetectionToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label>异常事件保存位置</label>
+                        <div style="display: flex; gap: 10px; align-items: center; width:60%;">
+                            <input type="text" class="text-input" value="D:\OmniAero\Events\" readonly style="flex:1;">
+                            <button class="action-btn" onclick="showToast('正在打开文件夹选择器...','info')">切换路径</button>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label>显存管理</label>
+                        <button class="action-btn outline-btn" onclick="showToast('显存碎片已清理完毕','success')">清理显存碎片</button>
+                    </div>
+                    <div class="form-row">
+                        <label>系统缓存</label>
+                        <button class="action-btn outline-btn" onclick="showToast('系统缓存已释放 2.4GB','success')">清理缓存</button>
+                    </div>
+                </div>
+
+                <!-- 账号相关设置 -->
+                <div class="config-card">
+                    <h3>账号安全与设置</h3>
+                    <div class="form-row">
+                        <label>用户头像</label>
+                        <div style="display: flex; gap: 15px; align-items: center; width:60%;">
+                            <img src="image/avatar.png" alt="Avatar" style="width:40px; height:40px; border-radius:50%; border:1px solid #475569;" onerror="this.style.display='none'">
+                            <button class="action-btn" onclick="showToast('请选择要上传的图片文件','info')">上传头像</button>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label>用户名</label>
+                        <div style="display: flex; gap: 10px; width:60%;">
+                            <input type="text" class="text-input" value="Admin" style="flex:1;">
+                            <button class="action-btn">修改</button>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label>绑定手机号</label>
+                        <div style="display: flex; gap: 10px; width:60%;">
+                            <input type="text" class="text-input" value="138****8888" style="flex:1;">
+                            <button class="action-btn">更换绑定</button>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label>绑定邮箱</label>
+                        <div style="display: flex; gap: 10px; width:60%;">
+                            <input type="text" class="text-input" value="admin@omniaero.com" style="flex:1;">
+                            <button class="action-btn">修改邮箱</button>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label>登录密码</label>
+                        <div style="display: flex; gap: 10px; width:60%;">
+                            <input type="password" class="text-input" value="********" style="flex:1;" readonly>
+                            <button class="action-btn" style="border-color:#ef4444; color:#ef4444;">修改密码</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 消息提示框 (Toast) -->
+    <div id="toastMessage" class="toast">操作成功</div>
+
+    <script src="js/model.js"></script>
+    <link rel="stylesheet" href="css/agent.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/vehicle-theme.css">
+    <link rel="stylesheet" href="css/mobile.css">
+<div id="ai-agent-container" class="agent-container">
+    <button id="agent-trigger-btn" class="agent-trigger-btn" onclick="toggleAgent()">
+        <span class="arrow-icon">↑</span>
+    </button>
+
+    <div id="agent-chat-panel" class="agent-chat-panel collapsed">
+        <div class="agent-input-wrapper">
+            <input type="text" id="agent-input" placeholder="问问 Omni-Agent..." onkeypress="handleAgentInput(event)">
+            <button class="agent-send-btn" onclick="sendAgentMsg()">↑</button>
+            <button class="agent-minimize-btn" onclick="toggleAgent()">×</button>
+        </div>
+        <div class="agent-body" id="agent-chat-body"></div>
+    </div>
+</div>
+<script src="js/agent-runtime.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/omni-spa.js"></script>
+</body>
+</html>

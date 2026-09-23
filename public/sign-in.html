@@ -98,7 +98,7 @@
                 // 关键：保存“门禁卡” Token 到浏览器本地存储
                 localStorage.setItem('drone_token', result.data.token);
                 // 跳转到控制台工作台
-                window.location.href = "dashboard.html";
+                window.location.href = "user.html";
             } else {
                 alert(result.message || "登录失败，请检查邮箱或密码");
             }

@@ -1,0 +1,387 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniAero-OBB 奥米天鉴</title>
+    <script src="js/theme-init.js"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js"></script>
+    <link rel="stylesheet" href="css/user.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/vehicle-theme.css">
+    <link rel="stylesheet" href="css/uav-dashboard.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <script src="js/vehicle-nav.js" defer></script>
+</head>
+<body data-page="uav">
+
+    <header class="navbar">
+        <div class="nav-left">
+            <img src="image/logo.jpg" alt="Logo">
+            <span>OmniAero-OBB</span>
+        </div>
+        <div class="nav-center">
+            <div class="nav-tab active" onclick="window.location.href='user.html'">无人机</div>
+            <div class="nav-tab" onclick="window.location.href='map.html'">天眼GIS</div>
+            <div class="nav-tab" onclick="window.location.href='datacenter.html'">数据中心</div>
+            <div class="nav-tab" onclick="window.location.href='model.html'">模型设置</div>
+        </div>
+        <div class="nav-right">
+            <img src="image/avatar.png" alt="User Avatar">
+        </div>
+    </header>
+
+    <main class="main-content">
+        
+        <section class="drone-list-section">
+            <div class="list-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <span>无人机设备列表</span>
+                <button id="multiModeBtn" class="multi-mode-btn">开启分屏</button>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" id="droneSearch" placeholder="输入名称或型号搜索...">
+            </div>
+
+            <div class="drone-list" id="drone-list">
+                <div class="drone-item" data-id="drone_01" data-name="无人机 01 号" data-task="">
+                    <input type="checkbox" class="drone-checkbox" value="drone_01" style="display: none;">
+                    <div class="status-dot offline"></div>
+                    <div class="drone-info">
+                        <span class="drone-name" style="color:#94a3b8;">无人机 01 号</span>
+                        <span class="drone-status">状态: 离线未连接</span>
+                    </div>
+                    <div class="drone-ctrl">
+                        <button class="settings-btn" title="设备设置">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="drone-item" data-id="drone_02" data-name="无人机 02 号" data-task="">
+                    <input type="checkbox" class="drone-checkbox" value="drone_02" style="display: none;">
+                    <div class="status-dot offline"></div>
+                    <div class="drone-info">
+                        <span class="drone-name" style="color:#94a3b8;">无人机 02 号</span>
+                        <span class="drone-status">状态: 离线未连接</span>
+                    </div>
+                    <div class="drone-ctrl">
+                        <button class="settings-btn" title="设备设置">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="drone-item" data-id="drone_03" data-name="无人机 03 号" data-task="">
+                    <input type="checkbox" class="drone-checkbox" value="drone_03" style="display: none;">
+                    <div class="status-dot offline"></div>
+                    <div class="drone-info">
+                        <span class="drone-name" style="color:#94a3b8;">无人机 03 号</span>
+                        <span class="drone-status">状态: 离线未连接</span>
+                    </div>
+                    <div class="drone-ctrl">
+                        <button class="settings-btn" title="设备设置">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="drone-item" data-id="drone_04" data-name="无人机 04 号" data-task="">
+                    <input type="checkbox" class="drone-checkbox" value="drone_04" style="display: none;">
+                    <div class="status-dot offline"></div>
+                    <div class="drone-info">
+                        <span class="drone-name" style="color:#94a3b8;">无人机 04 号</span>
+                        <span class="drone-status">状态: 离线未连接</span>
+                    </div>
+                    <div class="drone-ctrl">
+                        <button class="settings-btn" title="设备设置">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="drone-item" data-id="drone_05" data-name="无人机 05 号" data-task="">
+                    <input type="checkbox" class="drone-checkbox" value="drone_05" style="display: none;">
+                    <div class="status-dot offline"></div>
+                    <div class="drone-info">
+                        <span class="drone-name" style="color:#94a3b8;">无人机 05 号</span>
+                        <span class="drone-status">状态: 离线未连接</span>
+                    </div>
+                    <div class="drone-ctrl">
+                        <button class="settings-btn" title="设备设置">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="no-results" class="no-results" style="display: none;">未找到匹配的设备</div>
+            </div>
+        </section>
+
+        <section class="video-section">
+            
+            <div class="video-controls" id="video-controls-bar">
+                <div class="dropdown">
+                    <button class="dropdown-btn" id="modeBtn">RGB模式 ▼</button>
+                    <div class="dropdown-content" id="modeMenu">
+                        <div data-mode="RGB">RGB模式</div>
+                        <div data-mode="IR">IR模式</div>
+                        <div data-mode="Enhance">图像增强模式</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-wrapper" id="video-wrapper">
+                <div id="video-grid" class="video-grid grid-1">
+                    <div class="video-box" id="default-video-box">
+                        
+                        <div class="image-container-roi" style="position:absolute; top:0; left:0; width:100%; height:100%; display:none; transform-origin: 0 0; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 2;">
+                            <img class="static-img-roi" style="width:100%; height:100%; object-fit:fill;" src="" alt="Drone Image">
+                        </div>
+                        <div class="selection-box-roi" style="position: absolute; border: 2px dashed #38bdf8; background: rgba(56, 189, 248, 0.2); display: none; z-index: 100; pointer-events: none;"></div>
+
+                        <video class="local-video" loop muted autoplay></video>
+                        <div class="video-placeholder" id="video-text">等待连接无人机画面... [RGB模式]</div>
+                        <canvas id="detection-canvas"></canvas>
+                        
+                        <div class="drone-hud">
+                            <div class="hud-top-bar">
+                                <span class="hud-drone-name">无人机 01 号</span>
+                                <span class="hud-mode">RGB模式</span>
+                            </div>
+                            <div class="hud-center-reticle">
+                                <span class="reticle-h"></span>
+                                <span class="reticle-v"></span>
+                                <span class="reticle-dot"></span>
+                            </div>
+                            <div class="hud-corners">
+                                <span class="corner tl"></span><span class="corner tr"></span>
+                                <span class="corner bl"></span><span class="corner br"></span>
+                            </div>
+                            <div class="hud-bottom-bar">
+                                <span class="hud-alt">ALT 120m</span>
+                                <span class="hud-speed">SPD 12m/s</span>
+                                <span class="hud-battery">BAT 85%</span>
+                                <span class="hud-time">--:--:--</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-panel" id="settings-panel" style="display: none;">
+                <div class="settings-header">
+                    <h2 id="settings-title">无人机 01 号 - 设备高级设置</h2>
+                    <button class="close-settings-btn" id="closeSettingsBtn">关闭设置 ×</button>
+                </div>
+                
+                <div class="settings-content">
+                    <div class="settings-card actions-card">
+                        <h3>快捷指令控制</h3>
+                        <div class="action-buttons">
+                            <button class="action-btn connect-btn" id="btn-action-connect">连接设备</button>
+                            <button class="action-btn" data-action="rth">命令返航</button>
+                            <button class="action-btn" data-action="inspect">巡检模式</button>
+                            <button class="action-btn" data-action="recon">侦察模式</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-grid">
+                        <div class="settings-column">
+                            <div class="settings-card">
+                                <h3>1. 通道源选择</h3>
+                                <div class="setting-item">
+                                    <label>RGB 视频流 URL</label>
+                                    <input type="text" id="set-rgb-url" class="set-input" placeholder="rtsp://...">
+                                </div>
+                                <div class="setting-item">
+                                    <label>IR 视频流 URL</label>
+                                    <input type="text" id="set-ir-url" class="set-input" placeholder="rtsp://...">
+                                </div>
+                            </div>
+
+                            <div class="settings-card">
+                                <h3>2. 图像对齐位移微调</h3>
+                                <div class="setting-item inline">
+                                    <span>对齐模式</span>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <span id="set-align-text" style="width: 40px;">自动</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="set-align-auto">
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="setting-item align-manual" id="set-align-manual-box">
+                                    <label>手动偏移量 (px)</label>
+                                    <div class="coord-inputs">
+                                        <span>X: <input type="number" id="set-align-x" class="set-input-small"></span>
+                                        <span>Y: <input type="number" id="set-align-y" class="set-input-small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="settings-card">
+                                <h3>3. 抽帧处理</h3>
+                                <div class="setting-item">
+                                    <select id="set-frame-drop" class="set-select">
+                                        <option value="0">不抽帧 (实时播放)</option>
+                                        <option value="1">抽 1 帧</option>
+                                        <option value="2">抽 2 帧</option>
+                                        <option value="3">抽 3 帧</option>
+                                        <option value="4">抽 4 帧</option>
+                                        <option value="5">抽 5 帧</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-column">
+                            <div class="settings-card">
+                                <h3>4. 系统优化与增强</h3>
+                                <div class="setting-item inline">
+                                    <span>RGB 图像增强</span>
+                                    <label class="toggle-switch"><input type="checkbox" id="set-rgb-enhance"><span class="slider"></span></label>
+                                </div>
+                                <div class="setting-item inline">
+                                    <span>IR 图像增强</span>
+                                    <label class="toggle-switch"><input type="checkbox" id="set-ir-enhance"><span class="slider"></span></label>
+                                </div>
+                                <div class="setting-item inline">
+                                    <span>延迟优化 (低延迟模式)</span>
+                                    <label class="toggle-switch"><input type="checkbox" id="set-latency-opt"><span class="slider"></span></label>
+                                </div>
+                            </div>
+
+                            <div class="settings-card">
+                                <h3>5. 画面与模型显示设置</h3>
+                                <div class="setting-item inline">
+                                    <span>旋转框及标记颜色</span>
+                                    <input type="color" id="set-box-color" class="color-picker" value="#38bdf8">
+                                </div>
+                                <div class="setting-item inline">
+                                    <span>旋转框条纹粗细</span>
+                                    <select id="set-box-thick" class="set-select small">
+                                        <option value="1">细 (1px)</option>
+                                        <option value="2">中 (2px)</option>
+                                        <option value="3">粗 (3px)</option>
+                                    </select>
+                                </div>
+                                <div class="setting-item inline">
+                                    <span>显示旋转角度</span>
+                                    <label class="toggle-switch"><input type="checkbox" id="set-show-angle"><span class="slider"></span></label>
+                                </div>
+                                <div class="setting-item inline">
+                                    <span>显示物体类别</span>
+                                    <label class="toggle-switch"><input type="checkbox" id="set-show-class"><span class="slider"></span></label>
+                                </div>
+                                <div class="setting-item inline">
+                                    <span>IR 伪彩显示模式</span>
+                                    <select id="set-ir-color" class="set-select small">
+                                        <option value="gray">灰度原图</option>
+                                        <option value="iron">铁红热力</option>
+                                        <option value="rainbow">极光彩虹</option>
+                                    </select>
+                                </div>
+                                <div class="setting-item inline">
+                                    <span>显示运动轨迹</span>
+                                    <label class="toggle-switch"><input type="checkbox" id="set-show-track"><span class="slider"></span></label>
+                                </div>
+                            </div>
+
+                            <div class="settings-card">
+                                <h3>6. 模型选择</h3>
+                                <div class="setting-item">
+                                    <label>检测模型</label>
+                                    <select id="set-model-select" class="set-select">
+                                        <option value="" disabled selected>请选择模型</option>
+                                        <option value="OmniAero-Edge-o1" class="model-option" data-loaded="true">OmniAero-Edge-o1</option>
+                                        <option value="OmniAero-Edge-o2" class="model-option" data-loaded="false">OmniAero-Edge-o2</option>
+                                        <option value="OmniAero-Standard" class="model-option" data-loaded="false">OmniAero-Standard</option>
+                                        <option value="OmniAero-x1" class="model-option" data-loaded="false">OmniAero-x1</option>
+                                        <option value="OmniAero-x2" class="model-option" data-loaded="false">OmniAero-x2</option>
+                                        <option value="OmniAero-x3" class="model-option" data-loaded="false">OmniAero-x3</option>
+                                        <option value="OmniAero-Pro" class="model-option" data-loaded="false">OmniAero-Pro</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </section>
+    </main>
+
+    <div id="customAlert" class="custom-alert-overlay" style="display: none;">
+        <div class="custom-alert-box">
+            <div class="custom-alert-header">
+                <span>系统提示</span>
+                <button class="close-alert-btn" id="closeAlertIcon">×</button>
+            </div>
+            <div class="custom-alert-body">
+                <div id="customAlertIcon" class="alert-icon"></div>
+                <div id="customAlertMessage" class="alert-message"></div>
+            </div>
+            <div class="custom-alert-footer">
+                <button class="custom-alert-btn" id="closeAlertBtn">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/user.js"></script>
+    <link rel="stylesheet" href="css/agent.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/vehicle-theme.css">
+    <link rel="stylesheet" href="css/uav-dashboard.css">
+    <link rel="stylesheet" href="css/mobile.css">
+<div id="ai-agent-container" class="agent-container">
+    <button id="agent-trigger-btn" class="agent-trigger-btn" onclick="toggleAgent()">
+        <span class="arrow-icon">↑</span>
+    </button>
+
+    <div id="agent-chat-panel" class="agent-chat-panel collapsed">
+        <div class="agent-input-wrapper">
+            <input type="text" id="agent-input" placeholder="问问 Omni-Agent..." onkeypress="handleAgentInput(event)">
+            <button class="agent-schedule-btn" id="agent-schedule-btn" type="button" title="查看定时任务">任务</button>
+            <button class="agent-send-btn" onclick="sendAgentMsg()">↑</button>
+            <button class="agent-minimize-btn" onclick="toggleAgent()">×</button>
+        </div>
+        <div class="agent-body" id="agent-chat-body"></div>
+        <aside id="agent-schedule-panel" class="agent-schedule-panel">
+            <div class="agent-schedule-header">
+                <span>定时任务</span>
+                <button id="agent-schedule-close" class="agent-schedule-close" type="button">×</button>
+            </div>
+            <div id="agent-schedule-list" class="agent-schedule-list"></div>
+        </aside>
+    </div>
+</div>
+<script src="js/agent-runtime.js"></script>
+<!--多模态ai助手面板--->>
+<div id="mm-assistant-handle">
+    <span class="mm-handle-arrow">←</span>
+</div>
+
+<aside id="mm-assistant-panel">
+    <div class="mm-panel-header">
+        <span>多模态分析助手</span>
+    </div>
+
+    <div id="mm-status">等待手动检测...</div>
+
+    <div class="mm-panel-body">
+        <div id="mm-output" class="mm-chat-list"></div>
+
+        <div class="mm-composer">
+            <button id="mm-detect-btn" class="mm-composer-btn mm-detect-btn" type="button">自动检测</button>
+            <input id="mm-chat-input" class="mm-chat-input" type="text" placeholder="继续追问当前路况..." />
+            <button id="mm-send-btn" class="mm-composer-btn mm-send-btn" type="button">发送</button>
+        </div>
+    </div>
+</aside>
+<script src="js/theme.js"></script>
+<script src="js/uav-dashboard.js"></script>
+<script src="js/omni-spa.js"></script>
+</body>
+</html>

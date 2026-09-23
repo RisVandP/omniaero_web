@@ -1,198 +1,153 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-ÊÓÆµ YOLO ¼ì²â½Å±¾ - detect_video.py
-ÓÃÓÚ´¦ÀíÊÓÆµÎÄ¼ş²¢½øĞĞÊµÊ±ÖğÖ¡ YOLO ¼ì²â
-
-Ê¹ÓÃ·½·¨£º
-    python detect_video.py input.mp4 output.mp4
-"""
-
-import sys
+import os
 import cv2
-import json
-from pathlib import Path
+import torch
+import numpy as np
 from ultralytics import YOLO
-
-class VideoDetector:
-    """ÊÓÆµ¼ì²âÆ÷"""
-    
-    def __init__(self, model_path='best.pt'):
-        """³õÊ¼»¯¼ì²âÆ÷"""
-        self.model = YOLO(model_path)
-        self.class_names = {
-            'bus': '¹«½»³µ',
-            'car': 'Ğ¡Æû³µ',
-            'freight': '»õ³µ',
-            'truck': '´ó»õ³µ',
-            'van': 'Ãæ°ü³µ'
-        }
-    
-    def detect_video(self, input_path, output_path, conf=0.5, show_progress=True):
-        """
-        ¼ì²âÊÓÆµÎÄ¼ş
-        
-        :param input_path: ÊäÈëÊÓÆµÂ·¾¶
-        :param output_path: Êä³öÊÓÆµÂ·¾¶
-        :param conf: ÖÃĞÅ¶ÈãĞÖµ (0-1)
-        :param show_progress: ÊÇ·ñÏÔÊ¾½ø¶È
-        :return: ¼ì²âÍ³¼Æ½á¹û
-        """
-        # ´ò¿ªÊäÈëÊÓÆµ
-        cap = cv2.VideoCapture(input_path)
-        
-        if not cap.isOpened():
-            raise ValueError(f"ÎŞ·¨´ò¿ªÊÓÆµÎÄ¼ş: {input_path}")
-        
-        # »ñÈ¡ÊÓÆµĞÅÏ¢
-        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        fps = cap.get(cv2.CAP_PROP_FPS)
-        total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        
-        print(f"? ÊÓÆµĞÅÏ¢:")
-        print(f"   ·Ö±æÂÊ: {width}x{height}")
-        print(f"   Ö¡ÂÊ: {fps} fps")
-        print(f"   ×ÜÖ¡Êı: {total_frames}")
-        print(f"   Ê±³¤: {total_frames/fps:.1f}s")
-        
-        # ³õÊ¼»¯ÊÓÆµÊä³ö
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
-        
-        # ³õÊ¼»¯Í³¼Æ¼ÆÊıÆ÷
-        stats = {
-            'bus': 0,
-            'car': 0,
-            'freight': 0,
-            'truck': 0,
-            'van': 0,
-            'total_objects': 0
-        }
-        
-        frame_idx = 0
-        print(f"\n? ¿ªÊ¼¼ì²â...")
-        
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                break
-            
-            # ÔËĞĞ YOLO ¼ì²â
-            results = self.model(frame, conf=conf, verbose=False)
-            
-            # »ñÈ¡¼ì²â½á¹û
-            detections = results[0]
-            
-            # Í³¼Æ¼ì²â¶ÔÏó
-            for box in detections.boxes:
-                class_id = int(box.cls)
-                class_name = self.model.names[class_id].lower()
-                confidence = float(box.conf)
-                
-                # ·ÖÀàÍ³¼Æ
-                if 'bus' in class_name:
-                    stats['bus'] += 1
-                elif 'freight' in class_name:
-                    stats['freight'] += 1
-                elif 'truck' in class_name:
-                    stats['truck'] += 1
-                elif 'van' in class_name:
-                    stats['van'] += 1
-                else:
-                    stats['car'] += 1
-                
-                stats['total_objects'] += 1
-            
-            # »æÖÆ¼ì²â¿òºÍ±êÇ©
-            annotated_frame = detections.plot()
-            
-            # ÔÚ»­ÃæÉÏÏÔÊ¾Í³¼ÆĞÅÏ¢
-            self._draw_stats_on_frame(annotated_frame, stats)
-            
-            # Ğ´ÈëÊä³öÊÓÆµ
-            out.write(annotated_frame)
-            
-            frame_idx += 1
-            
-            # ÏÔÊ¾½ø¶È
-            if show_progress and frame_idx % 30 == 0:
-                progress = (frame_idx / total_frames) * 100
-                elapsed = frame_idx / fps
-                print(f"   ½ø¶È: {progress:.1f}% ({frame_idx}/{total_frames}) - ºÄÊ±: {elapsed:.1f}s")
-        
-        # ÊÍ·Å×ÊÔ´
-        cap.release()
-        out.release()
-        
-        # Ìí¼Ó×îÖÕÍ³¼Æ
-        stats['duration'] = total_frames / fps
-        stats['frames_processed'] = frame_idx
-        
-        print(f"\n? ¼ì²âÍê³É£¡")
-        print(f"? ¼ì²âÍ³¼Æ:")
-        print(f"   ¹«½»³µ: {stats['bus']}")
-        print(f"   Ğ¡Æû³µ: {stats['car']}")
-        print(f"   »õ³µ: {stats['freight']}")
-        print(f"   ´ó»õ³µ: {stats['truck']}")
-        print(f"   Ãæ°ü³µ: {stats['van']}")
-        print(f"   ×Ü¼Æ: {stats['total_objects']}")
-        print(f"   Êä³öÎÄ¼ş: {output_path}")
-        
-        return stats
-    
-    def _draw_stats_on_frame(self, frame, stats):
-        """ÔÚÊÓÆµÖ¡ÉÏ»æÖÆÍ³¼ÆĞÅÏ¢"""
-        h, w = frame.shape[:2]
-        
-        # »æÖÆ±³¾°¾ØĞÎ
-        cv2.rectangle(frame, (10, 10), (300, 150), (255, 255, 255), -1)
-        cv2.rectangle(frame, (10, 10), (300, 150), (0, 0, 0), 2)
-        
-        # »æÖÆÎÄ±¾
-        y_offset = 35
-        cv2.putText(frame, f"Bus: {stats['bus']}", (20, y_offset),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
-        cv2.putText(frame, f"Car: {stats['car']}", (20, y_offset + 30),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
-        cv2.putText(frame, f"Total: {stats['total_objects']}", (20, y_offset + 60),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
-        cv2.putText(frame, f"Freight: {stats['freight']}", (160, y_offset),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
-        cv2.putText(frame, f"Van: {stats['van']}", (160, y_offset + 30),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
+from tqdm import tqdm  # ç”¨äºæ˜¾ç¤ºè¿›åº¦æ¡
 
 
-def main():
-    """Ö÷º¯Êı"""
-    if len(sys.argv) < 3:
-        print("Ê¹ÓÃ·½·¨: python detect_video.py <input_video> <output_video> [confidence]")
-        print("Ê¾Àı:")
-        print("  python detect_video.py input.mp4 output.mp4")
-        print("  python detect_video.py input.mp4 output.mp4 0.6")
-        sys.exit(1)
-    
-    input_path = sys.argv[1]
-    output_path = sys.argv[2]
-    conf = float(sys.argv[3]) if len(sys.argv) > 3 else 0.5
-    
-    # ¼ì²éÊäÈëÎÄ¼şÊÇ·ñ´æÔÚ
-    if not Path(input_path).exists():
-        print(f"? ´íÎó: ÊäÈëÎÄ¼ş²»´æÔÚ - {input_path}")
-        sys.exit(1)
-    
-    try:
-        # ´´½¨¼ì²âÆ÷²¢´¦ÀíÊÓÆµ
-        detector = VideoDetector('best.pt')
-        stats = detector.detect_video(input_path, output_path, conf=conf)
-        
-        # Êä³ö JSON ¸ñÊ½µÄ½á¹û£¨ÓÃÓÚÓë Node.js ¼¯³É£©
-        print(f"\nSUCCESS_JSON:" + json.dumps(stats))
-        
-    except Exception as e:
-        print(f"? ´íÎó: {str(e)}")
-        sys.exit(1)
+def letterbox_4c(img, new_shape=(800, 800), color=(114, 114, 114, 0)):
+    """
+    è‡ªå®šä¹‰ 4é€šé“ LetterBox ç¼©æ”¾
+    ä¿è¯å›¾åƒç­‰æ¯”ä¾‹ç¼©æ”¾åˆ° 800x800ï¼Œå¤šä½™éƒ¨åˆ†ç”¨çº¯è‰²å¡«å……
+    """
+    shape = img.shape[:2]  # current shape [height, width]
+
+    # è®¡ç®—ç¼©æ”¾æ¯”ä¾‹
+    r = min(new_shape[0] / shape[0], new_shape[1] / shape[1])
+    new_unpad = int(round(shape[1] * r)), int(round(shape[0] * r))
+
+    # è®¡ç®—éœ€è¦å¡«å……çš„è¾¹æ¡†å¤§å° (Padding)
+    dw, dh = new_shape[1] - new_unpad[0], new_shape[0] - new_unpad[1]
+    dw /= 2  # ä¸¤è¾¹å„ä¸€åŠ
+    dh /= 2
+
+    # ç¼©æ”¾å›¾åƒ
+    if shape[::-1] != new_unpad:
+        img = cv2.resize(img, new_unpad, interpolation=cv2.INTER_LINEAR)
+
+    # æ·»åŠ è¾¹æ¡† (Padding)
+    top, bottom = int(round(dh - 0.1)), int(round(dh + 0.1))
+    left, right = int(round(dw - 0.1)), int(round(dw + 0.1))
+    img = cv2.copyMakeBorder(img, top, bottom, left, right, cv2.BORDER_CONSTANT, value=color)
+
+    return img, r, (left, top)
+
+
+def run_fusion_video_inference(rgb_dir, ir_dir, weights_path, output_video_path, fps=25):
+    # 1. åŠ è½½è®­ç»ƒå¥½çš„æ¨¡å‹
+    print("æ­£åœ¨åŠ è½½èåˆæ¨¡å‹...")
+    model = YOLO("best_3.pt")
+    names = model.names
+    colors = [(0, 255, 0), (255, 0, 0), (0, 0, 255), (0, 255, 255)]  # ä¸ºä¸åŒç±»åˆ«åˆ†é…é¢œè‰²
+
+    # 2. è·å–å¹¶æ’åºæ‰€æœ‰å›¾ç‰‡æ–‡ä»¶å (ç¡®ä¿ 000001, 000002 é¡ºåºæ­£ç¡®)
+    valid_extensions = ('.jpg', '.png', '.jpeg')
+    image_names = [f for f in os.listdir(rgb_dir) if f.lower().endswith(valid_extensions)]
+    image_names.sort()  # æŒ‰æ–‡ä»¶åå‡åºæ’åˆ—
+
+    if not image_names:
+        raise ValueError(f"åœ¨ {rgb_dir} ä¸­æ²¡æœ‰æ‰¾åˆ°å›¾ç‰‡æ–‡ä»¶ï¼")
+
+    print(f"å…±æ‰¾åˆ° {len(image_names)} å¸§å›¾åƒï¼Œå‡†å¤‡å¼€å§‹æ¨ç†...")
+
+    # 3. è¯»å–ç¬¬ä¸€å¸§ä»¥è·å–è§†é¢‘åˆ†è¾¨ç‡ï¼Œå¹¶åˆå§‹åŒ– VideoWriter
+    first_rgb_path = os.path.join(rgb_dir, image_names[0])
+    first_img = cv2.imread(first_rgb_path)
+    if first_img is None:
+        raise ValueError(f"æ— æ³•è¯»å–ç¬¬ä¸€å¼ å›¾ç‰‡: {first_rgb_path}")
+
+    height, width = first_img.shape[:2]
+    # ä½¿ç”¨ mp4v ç¼–ç å™¨ä¿å­˜ä¸º mp4 æ ¼å¼
+    fourcc = cv2.VideoWriter_fourcc(*'avc1')  
+    video_writer = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
+
+    # 4. é€å¸§å¾ªç¯å¤„ç†
+    for img_name in tqdm(image_names, desc="å¤„ç†è¿›åº¦"):
+        rgb_path = os.path.join(rgb_dir, img_name)
+        ir_path = os.path.join(ir_dir, img_name)  # å‡è®¾çº¢å¤–å›¾å’ŒRGBå›¾åŒå
+
+        if not os.path.exists(ir_path):
+            print(f"è­¦å‘Š: æ‰¾ä¸åˆ°å¯¹åº”çš„çº¢å¤–å›¾åƒ {ir_path}ï¼Œè·³è¿‡æ­¤å¸§ã€‚")
+            continue
+
+        rgb_img = cv2.imread(rgb_path)
+        ir_img = cv2.imread(ir_path, cv2.IMREAD_GRAYSCALE)
+
+        if rgb_img is None or ir_img is None:
+            continue
+
+        # å¯¹é½å°ºå¯¸ (é˜²æ­¢åŸå›¾ RGB å’Œ IR å°ºå¯¸æœ‰æå¾®å°å·®å¼‚)
+        if ir_img.shape[:2] != rgb_img.shape[:2]:
+            ir_img = cv2.resize(ir_img, (rgb_img.shape[1], rgb_img.shape[0]))
+
+        # å¿…é¡»å¢åŠ ä¸€ä¸ªç»´åº¦ï¼Œå°† (H, W) å˜æˆ (H, W, 1)ï¼Œå¦åˆ™ concatenate ä¼šæŠ¥é”™
+        # ir_img = np.expand_dims(ir_img, axis=-1)
+
+        # æ‹¼æ¥æˆ 4 é€šé“
+        img_4c = np.concatenate([rgb_img, ir_img], axis=-1)  # [H, W, 4]
+
+        # é¢„å¤„ç†ï¼šLetterBox ç¼©æ”¾åˆ° 800x800
+        img_padded, ratio, (pad_w, pad_h) = letterbox_4c(img_4c, new_shape=(800, 800))
+
+        # HWC è½¬æ¢ä¸º CHWï¼Œå¹¶è½¬æ¢ä¸º Tensor
+        tensor = img_padded.transpose(2, 0, 1)
+        tensor = torch.from_numpy(tensor).float() / 255.0
+        tensor = tensor.unsqueeze(0).to(model.device)
+
+        # æ¨¡å‹å‰å‘æ¨ç†
+        results = model(tensor, verbose=False)  # verbose=False å…³é—­æ¯å¸§æ¨ç†çš„æ‰“å°
+
+        # è§£æç»“æœ & é€†å‘ç”»æ¡†
+        obb_preds = results[0].obb
+        draw_img = rgb_img.copy()
+
+        if obb_preds is not None and len(obb_preds) > 0:
+            points = obb_preds.xyxyxyxy.cpu().numpy()
+            classes = obb_preds.cls.cpu().numpy()
+            confs = obb_preds.conf.cpu().numpy()
+
+            for pts, cls, conf in zip(points, classes, confs):
+                # åæ ‡è¿˜åŸ
+                pts[..., 0] = (pts[..., 0] - pad_w) / ratio
+                pts[..., 1] = (pts[..., 1] - pad_h) / ratio
+
+                pts = np.int32(pts)
+                cls_id = int(cls)
+                cls_name = names[cls_id]
+                color = colors[cls_id % len(colors)]
+
+                # ç”»æ—‹è½¬å¤šè¾¹å½¢ (OBB)
+                cv2.polylines(draw_img, [pts], isClosed=True, color=color, thickness=2)
+
+                # å†™ä¸Šç±»åˆ«å’Œç½®ä¿¡åº¦
+                text_x, text_y = pts[0][0], pts[0][1]
+                label_text = f"{cls_name} {conf:.2f}"
+                cv2.putText(draw_img, label_text, (text_x, text_y - 10),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+
+        # å†™å…¥è§†é¢‘å¸§
+        video_writer.write(draw_img)
+
+    # 5. é‡Šæ”¾èµ„æº
+    video_writer.release()
+    print(f"è§†é¢‘æ¨ç†å®Œæˆï¼ç»“æœå·²ä¿å­˜è‡³: {output_video_path}")
 
 
 if __name__ == '__main__':
-    main()
+    # ================= é…ç½®åŒºåŸŸ =================
+    # æ¨¡å‹è·¯å¾„
+    WEIGHTS_PATH = "F:/work/OmniAero-OBB/src/best_1.pt"
+
+    # å›¾åƒåºåˆ—æ–‡ä»¶å¤¹è·¯å¾„ (åŒ…å« 000001.jpg, 000002.jpg ç­‰)
+    RGB_DIR = "F:\\æœåŠ¡å¤–åŒ…\\Omniserver\\public\\Video\\æ— äººæœº01å·\\rgb"
+    IR_DIR = "F:\\æœåŠ¡å¤–åŒ…\\Omniserver\\public\\Video\\æ— äººæœº01å·\\ir"
+
+    # è¾“å‡ºçš„è§†é¢‘è·¯å¾„
+    OUTPUT_VIDEO = "fusion_inference_output_3.mp4"
+
+    # è§†é¢‘å¸§ç‡ (æ ¹æ®ä½ åŸæœ¬æ•°æ®é›†çš„å¸§ç‡è°ƒæ•´ï¼Œé€šå¸¸ä¸º 25 æˆ– 30)
+    FPS = 25
+    # ==========================================
+
+    run_fusion_video_inference(RGB_DIR, IR_DIR, WEIGHTS_PATH, OUTPUT_VIDEO, FPS)

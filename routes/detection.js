@@ -28,10 +28,11 @@ router.post('/run', upload.single('image'), (req, res) => {
     const outputFilename = 'result_' + req.file.filename + '.jpg';
     const outputPath = path.join(__dirname, '../public/uploads/', outputFilename);
 
-    // ⚠️ 极其重要：这里请务必改回你刚才查出来的 Conda Python 的绝对路径
-    // 例如: 'D:\\Anaconda3\\envs\\yolo_env\\python.exe'
-    const pythonExecutable = 'F:\\anaconda1\\envs\\yolo\\python.exe'; 
-    const pythonProcess = spawn(pythonExecutable, ['detect.py', inputPath, outputPath]);
+    const pythonExecutable = process.env.PYTHON_EXECUTABLE || 'python';
+    const pythonProcess = spawn(pythonExecutable, ['detect.py', inputPath, outputPath], {
+        cwd: path.join(__dirname, '..'),
+        env: process.env
+    });
 
     let pythonLogs = ""; // 收集所有的 Python 输出
 
