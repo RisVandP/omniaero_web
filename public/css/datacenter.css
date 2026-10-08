@@ -147,6 +147,9 @@ body[data-page="jobs"] .job-overview-entry.active {
     flex: 1; background-color: #0f172a; display: flex; flex-direction: column; 
     padding: 20px; gap: 20px; overflow-y: auto;
 }
+body[data-page="jobs"] .data-section > .data-panel {
+    flex-shrink: 0;
+}
 .data-section::-webkit-scrollbar { width: 8px; }
 .data-section::-webkit-scrollbar-thumb { background-color: #475569; border-radius: 4px; }
 .data-header h2 { color: #f8fafc; font-size: 1.4rem; font-weight: 600; border-left: 4px solid #38bdf8; padding-left: 10px; }
@@ -186,7 +189,8 @@ body[data-page="jobs"] .job-overview-entry.active {
 
 /* 板块1：车流量图表 */
 .chart-container {
-    height: 380px; background-color: #0f172a; border-radius: 6px;
+    height: clamp(280px, 36vh, 380px); flex-shrink: 0;
+    background-color: #0f172a; border-radius: 6px;
     border: 1px dashed #475569; display: flex; justify-content: center; align-items: center; overflow: hidden;
 }
 .chart-container.flow-chart-ready {
