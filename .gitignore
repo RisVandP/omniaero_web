@@ -26,9 +26,30 @@ public/uploads/*
 
 public/Video/**
 !public/Video/
+!public/Video/无人机01号/
+!public/Video/无人机01号/test.png
+!public/Video/无人机01号/test1.png
+!public/Video/无人机01号/rgb/
+!public/Video/无人机01号/rgb/000000.jpg
+!public/Video/无人机01号/ir/
+!public/Video/无人机01号/ir/000000.jpg
+!public/Video/无人机02号/
+!public/Video/无人机02号/rgb/
+!public/Video/无人机02号/rgb/000000.jpg
+!public/Video/无人机02号/ir/
+!public/Video/无人机02号/ir/000000.jpg
+!public/Video/无人机03号/
+!public/Video/无人机03号/rgb/
+!public/Video/无人机03号/rgb/000000.jpg
+!public/Video/无人机03号/ir/
+!public/Video/无人机03号/ir/000000.jpg
 !public/Video/无人机04号/
 !public/Video/无人机04号/rgb_video.mp4
 !public/Video/无人机04号/ir_video.mp4
+!public/Video/无人机04号/rgb/
+!public/Video/无人机04号/rgb/001008.jpg
+!public/Video/无人机04号/ir/
+!public/Video/无人机04号/ir/001008.jpg
 
 Vehicle-main/
 docs/
