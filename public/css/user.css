@@ -124,6 +124,8 @@ body {
 .close-settings-btn { background: transparent; color: #ef4444; border: 1px solid #ef4444; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
 .close-settings-btn:hover { background: #ef4444; color: white; }
 .settings-content { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+.settings-content > .actions-card,
+.settings-content > .settings-grid { flex-shrink: 0; }
 .settings-content::-webkit-scrollbar { width: 6px; }
 .settings-content::-webkit-scrollbar-thumb { background-color: #475569; border-radius: 3px; }
 
